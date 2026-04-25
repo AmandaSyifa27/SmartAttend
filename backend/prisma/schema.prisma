@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url = env("DATABASE_URL")
+}
+
+// ==========================================
+// BAGIAN 1: DATA MASTER
+// ==========================================
+
+model Admin {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique
+  password String
+  nama String
+}
+
+model Dosen {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  nidn String @unique
+  nama String
+  email String? @unique
+  password String
+  foto String?
+
+  jadwal JadwalMaster[]
+}
+
+model MataKuliah {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  kode String @unique
+  nama String
+  sks Int
+  
+  jadwal JadwalMaster[]
+}
+
+model TahunAjaran {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  nama String
+  isAktif Boolean @default(false)
+
+  jadwal JadwalMaster[]
+}
+
+model Mahasiswa {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  nim String @unique
+  nama String
+  prodi String
+  kelas String
+  angkatan Int
+  email String? @unique
+  foto String?
+  faceDescriptor Float[]
+
+  jadwalIds String[] @db.ObjectId
+  jadwal JadwalMaster[] @relation(fields: [jadwalIds], references: [id])
+
+  kehadiran CatatanHadir[]
+  createdAt DateTime @default(now())
+}
+
+// ==========================================
+// BAGIAN 2: JADWAL & PRESENSI
+// ==========================================
+
+model JadwalMaster {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  hari String
+  jamMulai String
+  jamSelesai String
+  kelas String
+  ruangan String?
+
+  dosenId String @db.ObjectId
+  dosen Dosen @relation(fields: [dosenId], references: [id])
+
+  mataKuliahId String @db.ObjectId
+  mataKuliah MataKuliah @relation(fields: [mataKuliahId], references: [id])
+
+  tahunAjaranId String @db.ObjectId
+  tahunAjaran TahunAjaran @relation(fields: [tahunAjaranId], references: [id])
+
+  mahasiswaIds String[] @db.ObjectId
+  mahasiswa Mahasiswa[] @relation(fields: [mahasiswaIds], references: [id])
+
+  sesiPertemuan SesiPertemuan[]
+}
+
+model SesiPertemuan {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  pertemuanKe Int
+  tipeKelas TipeKelas @default(OFFLINE)
+  statusSesi StatusSesi @default(BERLANGSUNG)
+  waktuBuka DateTime @default(now())
+  waktuTutup DateTime?
+
+  jadwalId String @db.ObjectId
+  jadwal JadwalMaster @relation(fields: [jadwalId], references: [id])
+
+  catatanHadir CatatanHadir[]
+  @@unique([jadwalId, pertemuanKe])
+}
+
+model CatatanHadir {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  status StatusKehadiran
+  waktuAbsen DateTime @default(now())
+
+  sesiId String @db.ObjectId
+  sesi SesiPertemuan @relation(fields: [sesiId], references: [id])
+
+  mahasiswaId String @db.ObjectId
+  mahasiswa Mahasiswa @relation(fields: [mahasiswaId], references: [id])
+
+  @@unique([sesiId, mahasiswaId])
+}
+
+// ==========================================
+// BAGIAN 3: ENUMS
+// ==========================================
+
+enum TipeKelas {
+  OFFLINE
+  ONLINE
+}
+
+enum StatusSesi {
+  BERLANGSUNG
+  SELESAI
+}
+
+enum StatusKehadiran {
+  HADIR
+  ALPA
+}
