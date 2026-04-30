@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
+import SearchInput from "@/components/ui/SearchInput";
+import Button from "@/components/ui/Button";
+import FormInput from "@/components/ui/FormInput";
+import PageHeader from "@/components/ui/PageHeader";
 
 export default function MataKuliahPage() {
  const [mataKuliah, setMataKuliah] = useState([]);
@@ -75,24 +79,17 @@ export default function MataKuliahPage() {
 
  return (
   <div>
-   <div className="flex items-center justify-between mb-6">
-    <h1 className="text-2xl font-bold text-gray-800">Kelola Mata Kuliah</h1>
-    <button
-     onClick={handleOpenAdd}
-     className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-lg"
-    >
-     + Tambah Mata Kuliah
-    </button>
-   </div>
+   <PageHeader title="Kelola Mata Kuliah">
+    <Button onClick={handleOpenAdd}>+ Tambah Mata Kuliah</Button>
+   </PageHeader>
 
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
     <div className="p-4 border-b border-gray-100">
-     <input
-      type="text"
+     <SearchInput
       placeholder="Cari Kode atau Nama MK..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
-      className="w-full max-w-xs border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+      className="w-full max-w-xs"
      />
     </div>
 
@@ -147,7 +144,6 @@ export default function MataKuliahPage() {
     </table>
    </div>
 
-   {/* Modal */}
    {showModal && (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
@@ -162,70 +158,45 @@ export default function MataKuliahPage() {
         ✕
        </button>
       </div>
-
       <form onSubmit={handleSubmit} className="space-y-4">
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         Kode MK
-        </label>
-        <input
-         type="text"
-         placeholder="Contoh: TI-601"
-         value={form.kode}
-         onChange={(e) => setForm({ ...form, kode: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-         required
-        />
-       </div>
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         Nama Mata Kuliah
-        </label>
-        <input
-         type="text"
-         placeholder="Contoh: Pemrograman Web Lanjut"
-         value={form.nama}
-         onChange={(e) => setForm({ ...form, nama: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-         required
-        />
-       </div>
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         SKS
-        </label>
-        <input
-         type="number"
-         placeholder="3"
-         min="1"
-         max="6"
-         value={form.sks}
-         onChange={(e) => setForm({ ...form, sks: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-         required
-        />
-       </div>
-
+       <FormInput
+        label="Kode MK"
+        placeholder="TI-601"
+        value={form.kode}
+        onChange={(e) => setForm({ ...form, kode: e.target.value })}
+        required
+       />
+       <FormInput
+        label="Nama Mata Kuliah"
+        placeholder="Pemrograman Web Lanjut"
+        value={form.nama}
+        onChange={(e) => setForm({ ...form, nama: e.target.value })}
+        required
+       />
+       <FormInput
+        label="SKS"
+        type="number"
+        placeholder="3"
+        value={form.sks}
+        onChange={(e) => setForm({ ...form, sks: e.target.value })}
+        required
+       />
        {error && (
         <p className="text-red-500 text-sm bg-red-50 px-3 py-2 rounded-lg">
          {error}
         </p>
        )}
-
        <div className="flex gap-3 pt-2">
-        <button
-         type="button"
+        <Button
+         variant="outline"
          onClick={() => setShowModal(false)}
-         className="flex-1 border border-gray-300 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50"
+         className="flex-1"
         >
          Batal
-        </button>
-        <button
-         type="submit"
-         className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-lg"
-        >
+        </Button>
+        <Button type="submit" className="flex-1">
          {editData ? "Simpan Perubahan" : "Tambah Mata Kuliah"}
-        </button>
+        </Button>
        </div>
       </form>
      </div>

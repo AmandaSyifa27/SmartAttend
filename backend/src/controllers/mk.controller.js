@@ -15,7 +15,7 @@ const create = async (req, res) => {
  const { kode, nama, sks } = req.body;
  try {
   const data = await prisma.mataKuliah.create({
-   data: { kode, nama, sks },
+   data: { kode, nama, sks: parseInt(sks) },
   });
   res.status(201).json({ message: "Mata kuliah berhasil dibuat", data });
  } catch (err) {
@@ -29,7 +29,7 @@ const update = async (req, res) => {
  try {
   const data = await prisma.mataKuliah.update({
    where: { id },
-   data: { kode, nama, sks },
+   data: { kode, nama, sks: parseInt(sks) },
   });
   res.json({ message: "Mata Kuliah berhasil diupdate", data });
  } catch (err) {

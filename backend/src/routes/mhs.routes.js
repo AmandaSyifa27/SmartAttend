@@ -8,8 +8,8 @@ const {
  remove,
  enrollFace,
 } = require("../controllers/mhs.controller");
-const { verifyToken } = require("../middleware/auth.middleware");
-const { verifyRole } = require("../middleware/role.middleware");
+const { verifyToken } = require("../middlewares/auth.middleware");
+const { verifyRole } = require("../middlewares/role.middleware");
 
 router.get("/", verifyToken, getAll);
 router.get("/:id", verifyToken, getById);

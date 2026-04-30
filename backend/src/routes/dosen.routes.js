@@ -6,12 +6,13 @@ const {
  update,
  remove,
 } = require("../controllers/dosen.controller");
-const { verifyToken } = require("../middleware/auth.middleware");
-const { verifyRole } = require("../middleware/role.middleware");
+const { verifyToken } = require("../middlewares/auth.middleware");
+const { verifyRole } = require("../middlewares/role.middleware");
 
 router.get("/", verifyToken, getAll);
 router.post("/", verifyToken, verifyRole("admin"), create);
-router.put("/:id", verifyToken, verifyRole("admin"), update);
+router.put("/:id", verifyToken, update);
+// router.put("/:id", verifyToken, verifyRole("admin"), update);
 router.delete("/:id", verifyToken, verifyRole("admin"), remove);
 
 module.exports = router;

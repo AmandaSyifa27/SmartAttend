@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
+import PageHeader from "@/components/ui/PageHeader";
+import Button from "@/components/ui/Button";
+import SearchInput from "@/components/ui/SearchInput";
 
 const HARI = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
@@ -161,7 +164,13 @@ export default function JadwalPage() {
 
  return (
   <div>
-   <div className="flex items-center justify-between mb-4">
+   <PageHeader
+    title="Jadwal & Peserta (KRS)"
+    subtitle="Menampilkan jadwal untuk T.A Aktif"
+   >
+    <Button onClick={handleOpenAdd}>📅 Buat Jadwal Master</Button>
+   </PageHeader>
+   {/* <div className="flex items-center justify-between mb-4">
     <div>
      <h1 className="text-2xl font-bold text-gray-800">
       Jadwal & Peserta (KRS)
@@ -174,18 +183,24 @@ export default function JadwalPage() {
     >
      📅 Buat Jadwal Master
     </button>
-   </div>
+   </div> */}
 
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
     {/* Filter */}
     <div className="p-4 border-b border-gray-100 flex gap-3">
-     <input
+     <SearchInput
+      placeholder="Cari MK, Dosen, atau Kelas..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      className="flex-1 max-w-xs"
+     />
+     {/* <input
       type="text"
       placeholder="Cari MK, Dosen, atau Kelas..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
       className="border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 flex-1 max-w-xs"
-     />
+     /> */}
      <select
       value={filterHari}
       onChange={(e) => setFilterHari(e.target.value)}
@@ -295,7 +310,7 @@ export default function JadwalPage() {
        </button>
       </div>
 
-      <form onSubmit={handleSubmitJadwal} className="space-y-3">
+      <form onSubmit={handleSubmitJadwal} className="space-y-3 text-gray-700">
        <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
          Mata Kuliah
@@ -472,7 +487,7 @@ export default function JadwalPage() {
        placeholder="Cari NIM atau Nama..."
        value={searchMhs}
        onChange={(e) => setSearchMhs(e.target.value)}
-       className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 mb-3"
+       className="w-full text-gray-700 border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 mb-3"
       />
 
       {/* List Mahasiswa */}
@@ -487,7 +502,7 @@ export default function JadwalPage() {
            : "border-gray-100 hover:bg-gray-50"
          }`}
         >
-         <div className="w-9 h-9 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 text-xs font-bold flex-shrink-0">
+         <div className="w-9 h-9 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 text-xs font-bold shrink-0">
           {mhs.nama.slice(0, 2).toUpperCase()}
          </div>
          <div className="flex-1">
@@ -498,7 +513,7 @@ export default function JadwalPage() {
           )}
          </div>
          <div
-          className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+          className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 ${
            selectedMhsIds.includes(mhs.id)
             ? "bg-purple-600 border-purple-600"
             : "border-gray-300"

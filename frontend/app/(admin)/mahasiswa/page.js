@@ -2,6 +2,11 @@
 
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
+import SearchInput from "@/components/ui/SearchInput";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import FormInput from "@/components/ui/FormInput";
+import PageHeader from "@/components/ui/PageHeader";
 import ModalEnrollWajah from "@/components/shared/ModalEnrollWajah";
 
 export default function MahasiswaPage() {
@@ -91,26 +96,17 @@ export default function MahasiswaPage() {
 
  return (
   <div>
-   <div className="flex items-center justify-between mb-6">
-    <h1 className="text-2xl font-bold text-gray-800">
-     Kelola Mahasiswa & Wajah
-    </h1>
-    <button
-     onClick={handleOpenAdd}
-     className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2"
-    >
-     + Tambah Mahasiswa
-    </button>
-   </div>
+   <PageHeader title="Kelola Mahasiswa & Wajah">
+    <Button onClick={handleOpenAdd}>+ Tambah Mahasiswa</Button>
+   </PageHeader>
 
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
     <div className="p-4 border-b border-gray-100">
-     <input
-      type="text"
+     <SearchInput
       placeholder="Cari NIM atau Nama..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
-      className="w-full max-w-xs border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+      className="w-full max-w-xs"
      />
     </div>
 
@@ -151,26 +147,21 @@ export default function MahasiswaPage() {
          </td>
          <td className="px-5 py-3">
           {item.isFaceEnrolled ? (
-           <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 w-fit">
-            ✓ Terekam
-           </span>
+           <Badge variant="success">✓ Terekam</Badge>
           ) : (
-           <span className="bg-orange-100 text-orange-600 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 w-fit">
-            ⚠ Belum Direkam
-           </span>
+           <Badge variant="warning">⚠ Belum Direkam</Badge>
           )}
          </td>
          <td className="px-5 py-3">
           <div className="flex items-center gap-2">
-           {!item.isFaceEnrolled && (
-            <button
+           {!item.isFaceEnrolled ? (
+            <Button
              onClick={() => setEnrollMhs(item)}
-             className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1"
+             className="text-xs py-1.5"
             >
              📷 Rekam Wajah Sekarang
-            </button>
-           )}
-           {item.isFaceEnrolled && (
+            </Button>
+           ) : (
             <button
              onClick={() => setEnrollMhs(item)}
              className="text-gray-400 hover:text-purple-600"
@@ -182,14 +173,12 @@ export default function MahasiswaPage() {
            <button
             onClick={() => handleOpenEdit(item)}
             className="text-gray-400 hover:text-purple-600"
-            title="Edit"
            >
             ✏️
            </button>
            <button
             onClick={() => handleDelete(item.id)}
             className="text-gray-400 hover:text-red-500"
-            title="Hapus"
            >
             🗑️
            </button>
@@ -220,88 +209,50 @@ export default function MahasiswaPage() {
 
       <form onSubmit={handleSubmit} className="space-y-3">
        <div className="grid grid-cols-2 gap-3">
-        <div>
-         <label className="block text-sm font-medium text-gray-700 mb-1">
-          NIM
-         </label>
-         <input
-          type="text"
-          placeholder="2023001"
-          value={form.nim}
-          onChange={(e) => setForm({ ...form, nim: e.target.value })}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-          required
-         />
-        </div>
-        <div>
-         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Angkatan
-         </label>
-         <input
-          type="number"
-          placeholder="2023"
-          value={form.angkatan}
-          onChange={(e) => setForm({ ...form, angkatan: e.target.value })}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-          required
-         />
-        </div>
-       </div>
-
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         Nama
-        </label>
-        <input
-         type="text"
-         placeholder="Nama lengkap"
-         value={form.nama}
-         onChange={(e) => setForm({ ...form, nama: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+        <FormInput
+         label="NIM"
+         placeholder="2023001"
+         value={form.nim}
+         onChange={(e) => setForm({ ...form, nim: e.target.value })}
+         required
+        />
+        <FormInput
+         label="Angkatan"
+         type="number"
+         placeholder="2023"
+         value={form.angkatan}
+         onChange={(e) => setForm({ ...form, angkatan: e.target.value })}
          required
         />
        </div>
-
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         Program Studi
-        </label>
-        <input
-         type="text"
-         placeholder="Teknik Informatika"
-         value={form.prodi}
-         onChange={(e) => setForm({ ...form, prodi: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-         required
-        />
-       </div>
-
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         Kelas
-        </label>
-        <input
-         type="text"
-         placeholder="TI-6A"
-         value={form.kelas}
-         onChange={(e) => setForm({ ...form, kelas: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-         required
-        />
-       </div>
-
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         Email
-        </label>
-        <input
-         type="email"
-         placeholder="mahasiswa@kampus.ac.id"
-         value={form.email}
-         onChange={(e) => setForm({ ...form, email: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-        />
-       </div>
+       <FormInput
+        label="Nama"
+        placeholder="Nama lengkap"
+        value={form.nama}
+        onChange={(e) => setForm({ ...form, nama: e.target.value })}
+        required
+       />
+       <FormInput
+        label="Program Studi"
+        placeholder="Teknik Informatika"
+        value={form.prodi}
+        onChange={(e) => setForm({ ...form, prodi: e.target.value })}
+        required
+       />
+       <FormInput
+        label="Kelas"
+        placeholder="TI-6A"
+        value={form.kelas}
+        onChange={(e) => setForm({ ...form, kelas: e.target.value })}
+        required
+       />
+       <FormInput
+        label="Email"
+        type="email"
+        placeholder="mahasiswa@kampus.ac.id"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+       />
 
        {error && (
         <p className="text-red-500 text-sm bg-red-50 px-3 py-2 rounded-lg">
@@ -310,24 +261,23 @@ export default function MahasiswaPage() {
        )}
 
        <div className="flex gap-3 pt-2">
-        <button
-         type="button"
+        <Button
+         variant="outline"
          onClick={() => setShowModal(false)}
-         className="flex-1 border border-gray-300 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50"
+         className="flex-1"
         >
          Batal
-        </button>
-        <button
-         type="submit"
-         className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-lg"
-        >
+        </Button>
+        <Button type="submit" className="flex-1">
          {editData ? "Simpan Perubahan" : "Tambah Mahasiswa"}
-        </button>
+        </Button>
        </div>
       </form>
      </div>
     </div>
    )}
+
+   {/* Modal Enroll Wajah */}
    {enrollMhs && (
     <ModalEnrollWajah
      mahasiswa={enrollMhs}

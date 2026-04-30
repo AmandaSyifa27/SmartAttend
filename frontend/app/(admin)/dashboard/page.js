@@ -128,7 +128,7 @@ export default function DashboardPage() {
         onClick={() => router.push(item.href)}
         className="w-full flex items-center gap-4 px-4 py-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors text-left"
        >
-        <span className="w-7 h-7 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+        <span className="w-7 h-7 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-sm font-bold shrink-0">
          {item.no}
         </span>
         <span className="text-sm text-gray-700">{item.label}</span>
@@ -151,7 +151,7 @@ export default function DashboardPage() {
       <div className="space-y-3">
        {aktivitas.map((item, i) => (
         <div key={i} className="flex items-start gap-3">
-         <span className="w-2 h-2 bg-purple-500 rounded-full mt-1.5 flex-shrink-0" />
+         <span className="w-2 h-2 bg-purple-500 rounded-full mt-1.5 shrink-0" />
          <div>
           <p className="text-sm text-gray-700">{item.label}</p>
           <p className="text-xs text-gray-400">{item.waktu}</p>

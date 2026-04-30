@@ -6,6 +6,7 @@ import api from "@/lib/axios";
 
 export default function ModalEnrollWajah({ mahasiswa, onClose, onSuccess }) {
  const videoRef = useRef(null);
+ const streamRef = useRef(null);
  const [modelLoaded, setModelLoaded] = useState(false);
  const [kameraAktif, setKameraAktif] = useState(false);
  const [capturing, setCapturing] = useState(false);
@@ -27,9 +28,36 @@ export default function ModalEnrollWajah({ mahasiswa, onClose, onSuccess }) {
   loadModels();
  }, []);
 
+ // Cleanup: matikan kamera saat komponen unmount
+ useEffect(() => {
+  return () => {
+   if (streamRef.current) {
+    streamRef.current.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+   }
+  };
+ }, []);
+
+ const stopKamera = () => {
+  if (streamRef.current) {
+   streamRef.current.getTracks().forEach((track) => track.stop());
+   streamRef.current = null;
+  }
+  if (videoRef.current) {
+   videoRef.current.srcObject = null;
+  }
+  setKameraAktif(false);
+ };
+
+ const handleClose = () => {
+  stopKamera();
+  onClose();
+ };
+
  const startKamera = async () => {
   try {
    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+   streamRef.current = stream;
    videoRef.current.srcObject = stream;
    setKameraAktif(true);
    setStatus('Kamera aktif. Tekan "Ambil Sampel Wajah".');
@@ -80,11 +108,12 @@ export default function ModalEnrollWajah({ mahasiswa, onClose, onSuccess }) {
   );
 
   try {
-   await api.patch(`/mahasiswa/${mahasiswa.id}/enroll-face`, {
+   await api.post(`/mahasiswa/${mahasiswa.id}/enroll-face`, {
     faceDescriptor: avg,
    });
    setStatus("✅ Enrollment berhasil!");
    setTimeout(() => {
+    stopKamera();
     onSuccess();
     onClose();
    }, 1500);
@@ -106,7 +135,7 @@ export default function ModalEnrollWajah({ mahasiswa, onClose, onSuccess }) {
       </p>
      </div>
      <button
-      onClick={onClose}
+      onClick={handleClose}
       className="text-gray-400 hover:text-gray-600 text-xl"
      >
       ✕
@@ -156,7 +185,7 @@ export default function ModalEnrollWajah({ mahasiswa, onClose, onSuccess }) {
     {/* Tombol */}
     <div className="flex gap-3">
      <button
-      onClick={onClose}
+      onClick={handleClose}
       className="flex-1 border border-gray-300 text-gray-700 text-sm font-medium py-2.5 rounded-lg hover:bg-gray-50"
      >
       Batal

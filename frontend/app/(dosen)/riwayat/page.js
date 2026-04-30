@@ -87,7 +87,7 @@ export default function RiwayatPage() {
       <select
        value={selectedJadwal}
        onChange={(e) => setSelectedJadwal(e.target.value)}
-       className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+       className="text-gray-700 w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
       >
        <option value="">Pilih Mata Kuliah...</option>
        {jadwalList.map((j) => (
@@ -167,6 +167,9 @@ export default function RiwayatPage() {
           <th className="px-5 py-3 text-left sticky left-8 bg-gray-50">
            Nama Mahasiswa
           </th>
+          <th className="px-4 py-3 text-left left-47.5 bg-gray-50 z-10 min-w-27.5">
+           NIM
+          </th>
           {rekap.map((sesi) => (
            <th key={sesi.id} className="px-3 py-3 text-center">
             P{sesi.pertemuanKe}
@@ -185,6 +188,9 @@ export default function RiwayatPage() {
             </td>
             <td className="px-5 py-3 font-medium text-gray-700 sticky left-8 bg-white">
              {mhs.nama}
+            </td>
+            <td className="px-4 py-3 text-gray-500 left-47.5 bg-white z-10 min-w-27.5">
+             {mhs.nim}
             </td>
             {rekap.map((sesi) => {
              const status = getStatus(mhs.id, sesi.id);

@@ -9,6 +9,7 @@ const dosenRoutes = require("./routes/dosen.routes");
 const mahasiswaRoutes = require("./routes/mhs.routes");
 const jadwalRoutes = require("./routes/jadwal.routes");
 const presensiRoutes = require("./routes/presensi.routes");
+const adminRoutes = require("./routes/admin.routes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,6 +25,7 @@ app.use("/api/dosen", dosenRoutes);
 app.use("/api/mahasiswa", mahasiswaRoutes);
 app.use("/api/jadwal", jadwalRoutes);
 app.use("/api/presensi", presensiRoutes);
+app.use("/api/admin", adminRoutes);
 
 // tes route
 app.get("/", (req, res) => {

@@ -10,7 +10,7 @@
 ## Steps
 
 - [x] Fix `frontend/lib/axios.js` — remove wrong ESLint import
-- [x] Fix `backend/src/middleware/auth.middleware.js` — `jwt.verifyToken` → `jwt.verify`
+- [x] Fix `backend/src/middlewares/auth.middleware.js` — `jwt.verifyToken` → `jwt.verify`
 - [x] Fix `backend/src/controllers/auth.controller.js` — add `nidn` to destructuring
 - [x] Fix `frontend/app/(admin)/layout.js` — setUser before fetch, don't redirect on TA fetch error
 - [x] Fix `frontend/app/(dosen)/layout.js` — same resilience fixes

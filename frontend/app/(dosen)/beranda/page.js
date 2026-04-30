@@ -76,7 +76,7 @@ export default function BerandaDosenPage() {
     </div>
     <button
      onClick={() => setShowModal(true)}
-     className="bg-white text-purple-700 font-semibold text-sm px-4 py-2.5 rounded-xl hover:bg-purple-50 flex items-center gap-2 flex-shrink-0"
+     className="bg-white text-purple-700 font-semibold text-sm px-4 py-2.5 rounded-xl hover:bg-purple-50 flex items-center gap-2 shrink-0"
     >
      ⚡ Buat Kelas Instan
     </button>

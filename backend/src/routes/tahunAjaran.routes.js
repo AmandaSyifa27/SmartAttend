@@ -7,8 +7,8 @@
 //  update,
 //  remove,
 // } = require("../controllers/tahunAjaran.controller");
-// const { verifyToken } = require("../middleware/auth.middleware");
-// const { verifyRole } = require("../middleware/role.middleware");
+// const { verifyToken } = require("../middlewares/auth.middleware");
+// const { verifyRole } = require("../middlewares/role.middleware");
 
 // router.get("/", verifyToken, getAll);
 // router.post("/", verifyToken, verifyRole("admin"), create);
@@ -27,8 +27,8 @@ const {
  update,
  remove,
 } = require("../controllers/tahunAjaran.controller");
-const { verifyToken } = require("../middleware/auth.middleware");
-const { verifyRole } = require("../middleware/role.middleware");
+const { verifyToken } = require("../middlewares/auth.middleware");
+const { verifyRole } = require("../middlewares/role.middleware");
 
 router.get("/", verifyToken, getAll);
 router.post("/", verifyToken, verifyRole("admin"), create);

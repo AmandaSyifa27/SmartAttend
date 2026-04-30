@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
+import SearchInput from "@/components/ui/SearchInput";
+import Button from "@/components/ui/Button";
+import FormInput from "@/components/ui/FormInput";
+import PageHeader from "@/components/ui/PageHeader";
 
 export default function DataDosenPage() {
  const [dosen, setDosen] = useState([]);
@@ -85,31 +89,20 @@ export default function DataDosenPage() {
 
  return (
   <div>
-   <div className="flex items-center justify-between mb-6">
-    <div>
-     <h1 className="text-2xl font-bold text-gray-800">Kelola Data Dosen</h1>
-    </div>
-    <button
-     onClick={handleOpenAdd}
-     className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2"
-    >
-     + Tambah Dosen
-    </button>
-   </div>
+   <PageHeader title="Kelola Data Dosen">
+    <Button onClick={handleOpenAdd}>+ Tambah Dosen</Button>
+   </PageHeader>
 
-   {/* Search */}
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
     <div className="p-4 border-b border-gray-100">
-     <input
-      type="text"
+     <SearchInput
       placeholder="Cari NIDN atau Nama..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
-      className="w-full max-w-xs border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+      className="w-full max-w-xs"
      />
     </div>
 
-    {/* Tabel */}
     <table className="w-full text-sm">
      <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
       <tr>
@@ -142,15 +135,13 @@ export default function DataDosenPage() {
           <div className="flex items-center gap-2">
            <button
             onClick={() => handleOpenEdit(item)}
-            className="text-gray-400 hover:text-purple-600 transition-colors"
-            title="Edit"
+            className="text-gray-400 hover:text-purple-600"
            >
             ✏️
            </button>
            <button
             onClick={() => handleDelete(item.id)}
-            className="text-gray-400 hover:text-red-500 transition-colors"
-            title="Hapus"
+            className="text-gray-400 hover:text-red-500"
            >
             🗑️
            </button>
@@ -163,7 +154,6 @@ export default function DataDosenPage() {
     </table>
    </div>
 
-   {/* Modal Tambah/Edit */}
    {showModal && (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
@@ -178,80 +168,54 @@ export default function DataDosenPage() {
         ✕
        </button>
       </div>
-
       <form onSubmit={handleSubmit} className="space-y-4">
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         NIDN
-        </label>
-        <input
-         type="text"
-         placeholder="Contoh: 0412038801"
-         value={form.nidn}
-         onChange={(e) => setForm({ ...form, nidn: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-         required
-        />
-       </div>
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         Nama
-        </label>
-        <input
-         type="text"
-         placeholder="Contoh: Muhammad Hatta, M.Kom."
-         value={form.nama}
-         onChange={(e) => setForm({ ...form, nama: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-         required
-        />
-       </div>
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         Email
-        </label>
-        <input
-         type="email"
-         placeholder="Contoh: hatta@kampus.ac.id"
-         value={form.email}
-         onChange={(e) => setForm({ ...form, email: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-        />
-       </div>
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         {editData ? "Password Baru (kosongkan jika tidak diubah)" : "Password"}
-        </label>
-        <input
-         type="password"
-         placeholder="••••••••"
-         value={form.password}
-         onChange={(e) => setForm({ ...form, password: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-         required={!editData}
-        />
-       </div>
-
+       <FormInput
+        label="NIDN"
+        placeholder="0412038801"
+        value={form.nidn}
+        onChange={(e) => setForm({ ...form, nidn: e.target.value })}
+        required
+       />
+       <FormInput
+        label="Nama"
+        placeholder="Muhammad Hatta, M.Kom."
+        value={form.nama}
+        onChange={(e) => setForm({ ...form, nama: e.target.value })}
+        required
+       />
+       <FormInput
+        label="Email"
+        type="email"
+        placeholder="hatta@kampus.ac.id"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+       />
+       <FormInput
+        label={
+         editData ? "Password Baru (kosongkan jika tidak diubah)" : "Password"
+        }
+        type="password"
+        placeholder="••••••••"
+        value={form.password}
+        onChange={(e) => setForm({ ...form, password: e.target.value })}
+        required={!editData}
+       />
        {error && (
         <p className="text-red-500 text-sm bg-red-50 px-3 py-2 rounded-lg">
          {error}
         </p>
        )}
-
        <div className="flex gap-3 pt-2">
-        <button
-         type="button"
+        <Button
+         variant="outline"
          onClick={() => setShowModal(false)}
-         className="flex-1 border border-gray-300 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50"
+         className="flex-1"
         >
          Batal
-        </button>
-        <button
-         type="submit"
-         className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-lg"
-        >
+        </Button>
+        <Button type="submit" className="flex-1">
          {editData ? "Simpan Perubahan" : "Tambah Dosen"}
-        </button>
+        </Button>
        </div>
       </form>
      </div>

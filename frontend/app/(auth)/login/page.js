@@ -70,7 +70,7 @@ export default function LoginPage() {
     </div>
 
     <div className="bg-purple-600 rounded-xl p-4 flex items-center gap-3 z-10">
-     <div className="w-10 h-10 bg-purple-400 rounded-lg flex items-center justify-center text-xl flex-shrink-0">
+     <div className="w-10 h-10 bg-purple-400 rounded-lg flex items-center justify-center text-xl shrink-0">
       ⚡
      </div>
      <div>

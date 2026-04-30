@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import FormInput from "@/components/ui/FormInput";
+import PageHeader from "@/components/ui/PageHeader";
 
 export default function TahunAjaranPage() {
  const [data, setData] = useState([]);
@@ -68,22 +72,14 @@ export default function TahunAjaranPage() {
 
  return (
   <div>
-   <div className="flex items-center justify-between mb-2">
-    <div>
-     <h1 className="text-2xl font-bold text-gray-800">Kelola Tahun Ajaran</h1>
-     <p className="text-sm text-gray-500">
-      Hanya boleh ada 1 Tahun Ajaran yang berstatus Aktif.
-     </p>
-    </div>
-    <button
-     onClick={handleOpenAdd}
-     className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-lg"
-    >
-     + Tambah Tahun Ajaran
-    </button>
-   </div>
+   <PageHeader
+    title="Kelola Tahun Ajaran"
+    subtitle="Hanya boleh ada 1 Tahun Ajaran yang berstatus Aktif."
+   >
+    <Button onClick={handleOpenAdd}>+ Tambah Tahun Ajaran</Button>
+   </PageHeader>
 
-   <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden mt-4">
+   <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
     <table className="w-full text-sm">
      <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
       <tr>
@@ -113,13 +109,9 @@ export default function TahunAjaranPage() {
          <td className="px-5 py-3 font-medium text-gray-700">{item.nama}</td>
          <td className="px-5 py-3">
           {item.isAktif ? (
-           <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
-            ● Aktif
-           </span>
+           <Badge variant="success">● Aktif</Badge>
           ) : (
-           <span className="bg-gray-100 text-gray-500 text-xs font-semibold px-3 py-1 rounded-full">
-            ⊘ Tidak Aktif
-           </span>
+           <Badge variant="default">⊘ Tidak Aktif</Badge>
           )}
          </td>
          <td className="px-5 py-3">
@@ -154,7 +146,6 @@ export default function TahunAjaranPage() {
     </table>
    </div>
 
-   {/* Modal */}
    {showModal && (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
@@ -169,42 +160,30 @@ export default function TahunAjaranPage() {
         ✕
        </button>
       </div>
-
       <form onSubmit={handleSubmit} className="space-y-4">
-       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-         Nama Tahun Ajaran
-        </label>
-        <input
-         type="text"
-         placeholder="Contoh: 2025/2026 Genap"
-         value={form.nama}
-         onChange={(e) => setForm({ nama: e.target.value })}
-         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-         required
-        />
-       </div>
-
+       <FormInput
+        label="Nama Tahun Ajaran"
+        placeholder="2025/2026 Genap"
+        value={form.nama}
+        onChange={(e) => setForm({ nama: e.target.value })}
+        required
+       />
        {error && (
         <p className="text-red-500 text-sm bg-red-50 px-3 py-2 rounded-lg">
          {error}
         </p>
        )}
-
        <div className="flex gap-3 pt-2">
-        <button
-         type="button"
+        <Button
+         variant="outline"
          onClick={() => setShowModal(false)}
-         className="flex-1 border border-gray-300 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50"
+         className="flex-1"
         >
          Batal
-        </button>
-        <button
-         type="submit"
-         className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-lg"
-        >
+        </Button>
+        <Button type="submit" className="flex-1">
          {editData ? "Simpan Perubahan" : "Tambah"}
-        </button>
+        </Button>
        </div>
       </form>
      </div>

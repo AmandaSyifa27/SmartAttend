@@ -4,10 +4,14 @@ const {
  bukaSesi,
  getPertemuanByJadwal,
  submitBatch,
+ hapusSesiBerlangsung,
  getRekap,
+ updateKehadiran,
+ getRekapAdmin,
+ hapusSesiAdmin,
 } = require("../controllers/presensi.controller");
-const { verifyToken } = require("../middleware/auth.middleware");
-const { verifyRole } = require("../middleware/role.middleware");
+const { verifyToken } = require("../middlewares/auth.middleware");
+const { verifyRole } = require("../middlewares/role.middleware");
 
 router.post("/sesi", verifyToken, verifyRole("dosen"), bukaSesi);
 router.get("/sesi/:jadwalId/pertemuan", verifyToken, getPertemuanByJadwal);
@@ -17,6 +21,30 @@ router.post(
  verifyRole("dosen"),
  submitBatch,
 );
+router.delete(
+ "/sesi/:sesiId",
+ verifyToken,
+ verifyRole("dosen"),
+ hapusSesiBerlangsung,
+);
 router.get("/rekap/:jadwalId", verifyToken, getRekap);
+router.patch(
+ "/catatan/:catatanId",
+ verifyToken,
+ verifyRole("admin"),
+ updateKehadiran,
+);
+router.get(
+ "/admin/rekap/:jadwalId",
+ verifyToken,
+ verifyRole("admin"),
+ getRekapAdmin,
+);
+router.delete(
+ "/admin/sesi/:sesiId",
+ verifyToken,
+ verifyRole("admin"),
+ hapusSesiAdmin,
+);
 
 module.exports = router;

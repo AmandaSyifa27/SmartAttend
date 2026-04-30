@@ -79,7 +79,7 @@ const update = async (req, res) => {
  const { id } = req.params;
  const { nim, nama, prodi, kelas, angkatan, email } = req.body;
  try {
-  const data = await prisma.mahasoswa.update({
+  const data = await prisma.mahasiswa.update({
    where: { id },
    data: { nim, nama, prodi, kelas, angkatan: parseInt(angkatan), email },
   });
