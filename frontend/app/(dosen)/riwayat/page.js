@@ -160,12 +160,18 @@ export default function RiwayatPage() {
       </div>
      ) : (
       <div className="overflow-x-auto">
-       <table className="w-full text-sm">
+       {/* <table className="w-full text-sm"> */}
+       <table
+        style={{ borderCollapse: "collapse", whiteSpace: "nowrap" }}
+        className="text-sm w-full"
+       >
         <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
          <tr>
-          <th className="px-5 py-3 text-left sticky left-0 bg-gray-50">No</th>
-          <th className="px-5 py-3 text-left sticky left-8 bg-gray-50">
-           Nama Mahasiswa
+          <th className="px-4 py-3 text-left sticky left-0 bg-gray-50 z-10">
+           No
+          </th>
+          <th className="px-4 py-3 text-left sticky left-10 bg-gray-50 z-10 min-w-35">
+           Nama
           </th>
           <th className="px-4 py-3 text-left left-47.5 bg-gray-50 z-10 min-w-27.5">
            NIM
@@ -183,10 +189,10 @@ export default function RiwayatPage() {
           const persen = getPersentase(mhs.id);
           return (
            <tr key={mhs.id} className="hover:bg-gray-50">
-            <td className="px-5 py-3 text-gray-500 sticky left-0 bg-white">
+            <td className="px-4 py-3 text-gray-500 sticky left-0 bg-white z-10">
              {index + 1}
             </td>
-            <td className="px-5 py-3 font-medium text-gray-700 sticky left-8 bg-white">
+            <td className="px-4 py-3 font-medium text-gray-700 sticky left-10 bg-white z-10 min-w-35">
              {mhs.nama}
             </td>
             <td className="px-4 py-3 text-gray-500 left-47.5 bg-white z-10 min-w-27.5">

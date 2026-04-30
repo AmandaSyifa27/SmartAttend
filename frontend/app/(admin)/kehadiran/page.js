@@ -183,7 +183,7 @@ export default function RiwayatAdminPage() {
           <th className="px-4 py-3 text-left sticky left-10 bg-gray-50 z-10 min-w-35">
            Nama
           </th>
-          {/* <th className="px-4 py-3 text-left sticky left-10 bg-gray-50 z-10 min-w-[140px]">Nama</th> */}
+          {/* <th className="px-4 py-3 text-left left-10 bg-gray-50 z-10 min-w-[140px]">Nama</th> */}
           <th className="px-4 py-3 text-left left-47.5 bg-gray-50 z-10 min-w-27.5">
            NIM
           </th>

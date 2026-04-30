@@ -48,8 +48,10 @@ export default function LoginPage() {
    {/* Sisi Kiri — Ungu */}
    <div className="hidden md:flex w-1/2 bg-purple-700 flex-col justify-center px-12 text-white relative overflow-hidden">
     {/* Background decorative circles */}
-    <div className="absolute top-[-80px] left-[-80px] w-64 h-64 bg-purple-600 rounded-full opacity-50" />
-    <div className="absolute bottom-[-60px] right-[-60px] w-48 h-48 bg-purple-500 rounded-full opacity-40" />
+    <div className="absolute top-20 left-20 w-64 h-64 bg-purple-600 rounded-full opacity-50" />
+    {/* <div className="absolute top-[-80px] left-[-80px] w-64 h-64 bg-purple-600 rounded-full opacity-50" /> */}
+    <div className="absolute bottom-15 right-15 w-48 h-48 bg-purple-500 rounded-full opacity-40" />
+    {/* <div className="absolute bottom-[-60px] right-[-60px] w-48 h-48 bg-purple-500 rounded-full opacity-40" /> */}
 
     {/* Logo placeholder */}
     <div className="w-12 h-12 bg-purple-500 rounded-xl mb-8 z-10" />
