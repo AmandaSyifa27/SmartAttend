@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import api from "@/lib/axios";
 import ModalBuatKelas from "@/components/shared/ModalBuatKelas";
+import { CalendarFold, Clock, Play, Zap } from "lucide-react";
 
 export default function BerandaDosenPage() {
  const router = useRouter();
@@ -78,14 +79,16 @@ export default function BerandaDosenPage() {
      onClick={() => setShowModal(true)}
      className="bg-white text-purple-700 font-semibold text-sm px-4 py-2.5 rounded-xl hover:bg-purple-50 flex items-center gap-2 shrink-0"
     >
-     ⚡ Buat Kelas Instan
+     <Zap color="#ffbb00" />
+     Buat Kelas Instan
     </button>
    </div>
 
    {/* Jadwal Hari Ini */}
    <div className="mb-2 flex items-center justify-between">
     <h2 className="font-bold text-gray-800 flex items-center gap-2">
-     📅 Jadwal Anda Hari Ini
+     <CalendarFold color="#5C00F1" />
+     Jadwal Anda Hari Ini
     </h2>
     <p className="text-sm text-gray-400">
      {new Date().toLocaleDateString("id-ID", {
@@ -104,7 +107,7 @@ export default function BerandaDosenPage() {
      Tidak ada jadwal hari ini.
     </div>
    ) : (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
      {jadwalHariIni.map((item) => {
       const status = getStatus(item);
       return (
@@ -136,15 +139,18 @@ export default function BerandaDosenPage() {
         <p className="text-gray-500 text-sm mb-1">
          Kelas {item.kelas} • {item._count?.mahasiswa} Mahasiswa
         </p>
-        <p className="text-gray-400 text-xs mb-1">
-         🕐 {item.jamMulai} - {item.jamSelesai} WIB
+        <p className="text-gray-400 text-xs mb-1 flex items-center gap-1.5 mt-0.5">
+         <Clock size={16} color="#5C00F1" />
+         <span>
+          {item.jamMulai} - {item.jamSelesai} WIB
+         </span>
         </p>
-
         <button
          onClick={() => handleMulaiPresensi(item)}
-         className="w-full mt-3 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-lg"
+         className="flex items-center justify-center gap-2 px-4 w-full mt-3 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-lg transition-colors"
         >
-         ▶ Mulai Presensi
+         <Play size={18} color="#fff" />
+         Mulai Presensi
         </button>
        </div>
       );

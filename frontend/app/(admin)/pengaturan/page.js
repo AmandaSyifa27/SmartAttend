@@ -66,7 +66,7 @@ export default function PengaturanAdminPage() {
  }
 
  return (
-  <div className="max-w-lg">
+  <div className="max-w-lg mx-auto w-full">
    <PageHeader
     title="Pengaturan"
     subtitle="Kelola informasi profil dan keamanan akun Anda."

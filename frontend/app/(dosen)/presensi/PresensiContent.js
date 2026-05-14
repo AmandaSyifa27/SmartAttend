@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/lib/axios";
 import * as faceapi from "face-api.js";
+import { Camera, Check, ChevronLeft, MonitorCheck, Play } from "lucide-react";
 
 export default function PresensiContent() {
  const router = useRouter();
@@ -311,8 +312,8 @@ export default function PresensiContent() {
   return (
    <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm w-full max-w-md p-8 text-center">
-     <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
-      📋
+     <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <MonitorCheck color="#5C00F1" />
      </div>
      <h2 className="text-xl font-bold text-gray-800 mb-2">
       Siap Memulai Presensi?
@@ -353,13 +354,14 @@ export default function PresensiContent() {
        onClick={handleKembali}
        className="flex-1 border border-gray-300 text-gray-700 text-sm font-medium py-2.5 rounded-xl hover:bg-gray-50"
       >
-       ← Kembali
+       Kembali
       </button>
       <button
        onClick={handleBukaSesi}
-       className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2.5 rounded-xl"
+       className="flex-1 flex items-center justify-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 rounded-xl"
       >
-       ▶ Mulai Sesi Presensi
+       <Play size={16} strokeWidth={3} color="#fff" />
+       Mulai Sesi Presensi
       </button>
      </div>
     </div>
@@ -374,9 +376,9 @@ export default function PresensiContent() {
     <div className="flex items-center gap-3 mb-3 shrink-0">
      <button
       onClick={handleKembali}
-      className="text-gray-400 hover:text-gray-600"
+      className="text-gray-400 hover:text-gray-600 flex items-center justify-center"
      >
-      ←
+      <ChevronLeft color="#b2b2b2" />
      </button>
      <div>
       <div className="flex items-center gap-2">
@@ -440,9 +442,10 @@ export default function PresensiContent() {
         {modelLoaded && (
          <button
           onClick={startKamera}
-          className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl"
+          className="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl"
          >
-          📷 Aktifkan Kamera
+          <Camera size={18} color="#fff" />
+          Aktifkan Kamera
          </button>
         )}
        </div>
@@ -540,9 +543,16 @@ export default function PresensiContent() {
      <button
       onClick={handleSubmit}
       disabled={submitting || !sesi}
-      className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+      className="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
      >
-      {submitting ? "Menyimpan..." : "✓ Konfirmasi Semua & Simpan"}
+      {submitting ? (
+       "Menyimpan..."
+      ) : (
+       <>
+        <Check size={16} color="#fff" />
+        <span>Konfirmasi Semua & Simpan</span>
+       </>
+      )}
      </button>
     </div>
    </div>

@@ -47,7 +47,7 @@ export default function PengaturanPage() {
  };
 
  return (
-  <div className="max-w-lg">
+  <div className="max-w-lg mx-auto w-full">
    <h1 className="text-2xl font-bold text-gray-800 mb-1">Pengaturan</h1>
    <p className="text-gray-500 text-sm mb-6">
     Kelola informasi profil dan keamanan akun Anda.

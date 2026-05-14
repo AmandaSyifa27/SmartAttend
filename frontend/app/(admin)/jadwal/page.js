@@ -5,6 +5,14 @@ import api from "@/lib/axios";
 import PageHeader from "@/components/ui/PageHeader";
 import Button from "@/components/ui/Button";
 import SearchInput from "@/components/ui/SearchInput";
+import {
+ CalendarPlus2,
+ Clock,
+ SquarePen,
+ Trash,
+ User,
+ Users,
+} from "lucide-react";
 
 const HARI = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
@@ -168,7 +176,13 @@ export default function JadwalPage() {
     title="Jadwal & Peserta (KRS)"
     subtitle="Menampilkan jadwal untuk T.A Aktif"
    >
-    <Button onClick={handleOpenAdd}>📅 Buat Jadwal Master</Button>
+    <Button
+     onClick={handleOpenAdd}
+     className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 py-2 rounded-lg font-semibold transition-colors hover:bg-[#8000d4]"
+    >
+     <CalendarPlus2 size={18} color="#fff" />
+     Buat Jadwal Master
+    </Button>
    </PageHeader>
    {/* <div className="flex items-center justify-between mb-4">
     <div>
@@ -204,7 +218,7 @@ export default function JadwalPage() {
      <select
       value={filterHari}
       onChange={(e) => setFilterHari(e.target.value)}
-      className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+      className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-700"
      >
       <option value="Semua">Semua Hari</option>
       {HARI.map((h) => (
@@ -243,17 +257,27 @@ export default function JadwalPage() {
         <tr key={item.id} className="hover:bg-gray-50">
          <td className="px-5 py-3">
           <p className="font-medium text-gray-700">{item.hari},</p>
-          <p className="text-gray-500 text-xs">
-           🕐 {item.jamMulai} - {item.jamSelesai}
+          <p className="text-gray-500 text-xs flex items-center gap-1.5 mt-0.5">
+           <Clock size={16} color="#5C00F1" />
+           <span>
+            {item.jamMulai} - {item.jamSelesai}
+           </span>
           </p>
-          <span className="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full mt-1 inline-block">
+
+          <span className="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full mt-1.5 inline-block font-medium">
            Kelas {item.kelas}
           </span>
          </td>
+
          <td className="px-5 py-3">
           <p className="font-semibold text-gray-700">{item.mataKuliah?.nama}</p>
-          <p className="text-gray-400 text-xs">👤 {item.dosen?.nama}</p>
+
+          <p className="text-gray-400 text-xs flex items-center gap-1.5 mt-0.5">
+           <User size={16} color="#5C00F1" />
+           <span>{item.dosen?.nama}</span>
+          </p>
          </td>
+
          <td className="px-5 py-3">
           <span
            className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -271,19 +295,20 @@ export default function JadwalPage() {
             onClick={() => handleOpenPeserta(item)}
             className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1"
            >
-            👥 Kelola Peserta
+            <Users size={18} color="#FFFFFF" />
+            Kelola Peserta
            </button>
            <button
             onClick={() => handleOpenEdit(item)}
             className="text-gray-400 hover:text-purple-600"
            >
-            ✏️
+            <SquarePen size={18} color="#ffbb00" />
            </button>
            <button
             onClick={() => handleDelete(item.id)}
             className="text-gray-400 hover:text-red-500"
            >
-            🗑️
+            <Trash size={18} color="#f00048" />
            </button>
           </div>
          </td>

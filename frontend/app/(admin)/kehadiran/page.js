@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
 import PageHeader from "@/components/ui/PageHeader";
+import { Trash } from "lucide-react";
 
 export default function RiwayatAdminPage() {
  const [jadwalList, setJadwalList] = useState([]);
@@ -198,7 +199,7 @@ export default function RiwayatAdminPage() {
               className="text-red-400 hover:text-red-600 text-xs"
               title="Hapus pertemuan"
              >
-              🗑️
+              <Trash size={16} color="#f00048" />
              </button>
             </div>
            </th>

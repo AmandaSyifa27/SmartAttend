@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as faceapi from "face-api.js";
 import api from "@/lib/axios";
+import { Camera, Clapperboard } from "lucide-react";
 
 export default function ModalEnrollWajah({ mahasiswa, onClose, onSuccess }) {
  const videoRef = useRef(null);
@@ -194,19 +195,30 @@ export default function ModalEnrollWajah({ mahasiswa, onClose, onSuccess }) {
       <button
        onClick={startKamera}
        disabled={!modelLoaded}
-       className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-semibold py-2.5 rounded-lg"
+       className="flex-1 flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-semibold py-2.5 rounded-lg"
       >
-       {modelLoaded ? "📷 Aktifkan Kamera" : "Memuat Model..."}
+       {modelLoaded ? (
+        <>
+         <Camera size={18} color="#fff" strokeWidth={2.5} /> Aktifkan Kamera
+        </>
+       ) : (
+        "Memuat Model..."
+       )}
       </button>
      ) : (
       <button
        onClick={ambilSampel}
        disabled={capturing || samples.length >= TOTAL_SAMPLE}
-       className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-semibold py-2.5 rounded-lg"
+       className="flex-1 flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-semibold py-2.5 rounded-lg"
       >
-       {capturing
-        ? "Mendeteksi..."
-        : `📸 Ambil Sampel (${samples.length}/${TOTAL_SAMPLE})`}
+       {capturing ? (
+        "Mendeteksi..."
+       ) : (
+        <>
+         <Clapperboard size={18} strokeWidth={2.5} /> Ambil Sampel (
+         {samples.length}/{TOTAL_SAMPLE})
+        </>
+       )}
       </button>
      )}
     </div>

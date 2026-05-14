@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
+import { CalendarPlus, SquarePen } from "lucide-react";
 
 export default function TahunAjaranPage() {
  const [data, setData] = useState([]);
@@ -76,7 +77,13 @@ export default function TahunAjaranPage() {
     title="Kelola Tahun Ajaran"
     subtitle="Hanya boleh ada 1 Tahun Ajaran yang berstatus Aktif."
    >
-    <Button onClick={handleOpenAdd}>+ Tambah Tahun Ajaran</Button>
+    <Button
+     onClick={handleOpenAdd}
+     className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 py-2 rounded-lg font-semibold transition-colors hover:bg-[#8000d4]"
+    >
+     <CalendarPlus size={18} color="#fff" />
+     Tambah Tahun Ajaran
+    </Button>
    </PageHeader>
 
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
@@ -135,7 +142,7 @@ export default function TahunAjaranPage() {
             onClick={() => handleOpenEdit(item)}
             className="text-gray-400 hover:text-purple-600"
            >
-            ✏️
+            <SquarePen size={18} color="#ffbb00" />
            </button>
           </div>
          </td>

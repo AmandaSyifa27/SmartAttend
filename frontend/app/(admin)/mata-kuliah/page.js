@@ -6,6 +6,7 @@ import SearchInput from "@/components/ui/SearchInput";
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
+import { BookPlus, SquarePen, Trash } from "lucide-react";
 
 export default function MataKuliahPage() {
  const [mataKuliah, setMataKuliah] = useState([]);
@@ -80,7 +81,13 @@ export default function MataKuliahPage() {
  return (
   <div>
    <PageHeader title="Kelola Mata Kuliah">
-    <Button onClick={handleOpenAdd}>+ Tambah Mata Kuliah</Button>
+    <Button
+     onClick={handleOpenAdd}
+     className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 py-2 rounded-lg font-semibold transition-colors hover:bg-[#8000d4]"
+    >
+     <BookPlus size={18} color="#fff" />
+     Tambah Mata Kuliah
+    </Button>
    </PageHeader>
 
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
@@ -127,13 +134,13 @@ export default function MataKuliahPage() {
             onClick={() => handleOpenEdit(item)}
             className="text-gray-400 hover:text-purple-600"
            >
-            ✏️
+            <SquarePen size={18} color="#ffbb00" />
            </button>
            <button
             onClick={() => handleDelete(item.id)}
             className="text-gray-400 hover:text-red-500"
            >
-            🗑️
+            <Trash size={18} color="#f00048" />
            </button>
           </div>
          </td>

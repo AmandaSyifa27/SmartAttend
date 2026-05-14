@@ -35,6 +35,13 @@ const create = async (req, res) => {
 const update = async (req, res) => {
  const { id } = req.params;
  const { nidn, nama, email, password } = req.body;
+
+ if (req.user.role === "dosen" && req.user.id !== id) {
+  return res
+   .status(403)
+   .json({ message: "Tidak boleh mengedit data dosen lain" });
+ }
+
  try {
   let data = { nidn, nama, email };
 

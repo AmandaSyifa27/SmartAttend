@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import api from "@/lib/axios";
+import { CalendarDays, GraduationCap, Users, VideoOff } from "lucide-react";
 
 export default function DashboardPage() {
  const router = useRouter();
@@ -72,10 +73,10 @@ export default function DashboardPage() {
    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
     <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
      <div className="flex items-center gap-3 mb-2">
-      <div className="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center text-lg">
-       👥
+      <div className="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center">
+       <GraduationCap color="#5c00f1" />
       </div>
-      <p className="text-xs text-gray-500">Total Mahasiswa</p>
+      <p className="text-2xs text-gray-500">Total Mahasiswa</p>
      </div>
      <p className="text-2xl font-bold text-gray-800">
       {stats.totalMahasiswa.toLocaleString()}
@@ -85,9 +86,9 @@ export default function DashboardPage() {
     <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
      <div className="flex items-center gap-3 mb-2">
       <div className="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center text-lg">
-       👤
+       <Users color="#5c00f1" />
       </div>
-      <p className="text-xs text-gray-500">Total Dosen</p>
+      <p className="text-2xs text-gray-500">Total Dosen</p>
      </div>
      <p className="text-2xl font-bold text-gray-800">{stats.totalDosen}</p>
     </div>
@@ -95,9 +96,9 @@ export default function DashboardPage() {
     <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
      <div className="flex items-center gap-3 mb-2">
       <div className="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center text-lg">
-       📅
+       <CalendarDays color="#5c00f1" />
       </div>
-      <p className="text-xs text-gray-500">Jadwal Aktif (Smt Ini)</p>
+      <p className="text-2xs text-gray-500">Jadwal Aktif (Smt Ini)</p>
      </div>
      <p className="text-2xl font-bold text-gray-800">{stats.totalJadwal}</p>
     </div>
@@ -105,9 +106,9 @@ export default function DashboardPage() {
     <div className="bg-white rounded-xl p-4 border border-red-100 shadow-sm">
      <div className="flex items-center gap-3 mb-2">
       <div className="w-9 h-9 bg-red-100 rounded-lg flex items-center justify-center text-lg">
-       📷
+       <VideoOff color="#f00048" />
       </div>
-      <p className="text-xs text-red-500 font-semibold">Wajah Belum Direkam</p>
+      <p className="text-2xs text-red-500 font-semibold">Wajah Belum Direkam</p>
      </div>
      <p className="text-2xl font-bold text-red-600">{stats.belumDirekam}</p>
      <p className="text-xs text-gray-400 mt-1">Mahasiswa</p>

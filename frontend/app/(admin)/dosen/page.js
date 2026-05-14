@@ -6,6 +6,7 @@ import SearchInput from "@/components/ui/SearchInput";
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
+import { SquarePen, Trash, UserPlus } from "lucide-react";
 
 export default function DataDosenPage() {
  const [dosen, setDosen] = useState([]);
@@ -90,7 +91,13 @@ export default function DataDosenPage() {
  return (
   <div>
    <PageHeader title="Kelola Data Dosen">
-    <Button onClick={handleOpenAdd}>+ Tambah Dosen</Button>
+    <Button
+     onClick={handleOpenAdd}
+     className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 py-2 rounded-lg font-semibold transition-colors hover:bg-[#8000d4]"
+    >
+     <UserPlus size={18} color="#fff" className="" />
+     Tambah Dosen
+    </Button>
    </PageHeader>
 
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
@@ -137,13 +144,13 @@ export default function DataDosenPage() {
             onClick={() => handleOpenEdit(item)}
             className="text-gray-400 hover:text-purple-600"
            >
-            ✏️
+            <SquarePen size={18} color="#ffbb00" />
            </button>
            <button
             onClick={() => handleDelete(item.id)}
             className="text-gray-400 hover:text-red-500"
            >
-            🗑️
+            <Trash size={18} color="#f00048" />
            </button>
           </div>
          </td>

@@ -4,6 +4,20 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import {
+ BarChart2,
+ BookOpen,
+ Calendar,
+ ClipboardList,
+ GraduationCap,
+ LayoutDashboard,
+ LogOut,
+ Menu,
+ Settings,
+ UserCheck,
+ Users,
+ X,
+} from "lucide-react";
 
 export default function AdminLayout({ children }) {
  const router = useRouter();
@@ -46,30 +60,30 @@ export default function AdminLayout({ children }) {
  const menuGroups = [
   {
    label: "Menu Utama",
-   items: [{ href: "/dashboard", label: "Dashboard", icon: "⊞" }],
+   items: [{ href: "/dashboard", label: "Dashboard", icon: LayoutDashboard }],
   },
   {
    label: "Data Master",
    items: [
-    { href: "/dosen", label: "Data Dosen", icon: "👤" },
-    { href: "/mahasiswa", label: "Mahasiswa", icon: "👥" },
-    { href: "/mata-kuliah", label: "Mata Kuliah", icon: "📚" },
+    { href: "/dosen", label: "Data Dosen", icon: UserCheck },
+    { href: "/mahasiswa", label: "Mahasiswa", icon: GraduationCap },
+    { href: "/mata-kuliah", label: "Mata Kuliah", icon: BookOpen },
    ],
   },
   {
    label: "Akademik",
    items: [
-    { href: "/tahun-ajaran", label: "Tahun Ajaran", icon: "📅" },
-    { href: "/jadwal", label: "Jadwal dan KRS", icon: "🗓" },
+    { href: "/tahun-ajaran", label: "Tahun Ajaran", icon: Calendar },
+    { href: "/jadwal", label: "Jadwal dan KRS", icon: ClipboardList },
    ],
   },
   {
    label: "Laporan",
-   items: [{ href: "/kehadiran", label: "Rekap Kehadiran", icon: "📋" }],
+   items: [{ href: "/kehadiran", label: "Rekap Kehadiran", icon: BarChart2 }],
   },
   {
    label: "Lainnya",
-   items: [{ href: "/pengaturan", label: "Pengaturan", icon: "⚙️" }],
+   items: [{ href: "/pengaturan", label: "Pengaturan", icon: Settings }],
   },
  ];
 
@@ -104,7 +118,11 @@ export default function AdminLayout({ children }) {
       onClick={() => setSidebarOpen(!sidebarOpen)}
       className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-700 transition-colors"
      >
-      {sidebarOpen ? "◀" : "▶"}
+      {sidebarOpen ? (
+       <X className="h-6 w-6 text-gray-300" />
+      ) : (
+       <Menu className="h-6 w-6 text-gray-300" />
+      )}
      </button>
     </div>
 
@@ -128,7 +146,8 @@ export default function AdminLayout({ children }) {
            : "text-gray-400 hover:bg-gray-800 hover:text-white"
          }`}
         >
-         <span className="text-base shrink-0">{item.icon}</span>
+         <item.icon size={18} className="shrink-0" />
+         {/* <span className="text-base shrink-0">{item.icon}</span> */}
          {sidebarOpen && <span>{item.label}</span>}
         </Link>
        ))}
@@ -143,7 +162,7 @@ export default function AdminLayout({ children }) {
       title={!sidebarOpen ? "Keluar" : ""}
       className={`flex items-center ${sidebarOpen ? "gap-3 px-3" : "justify-center"} py-2 rounded-lg text-sm text-red-400 hover:bg-gray-800 w-full transition-colors`}
      >
-      <span className="shrink-0">🚪</span>
+      <LogOut size={18} className="shrink-0" />
       {sidebarOpen && <span>Keluar</span>}
      </button>
     </div>

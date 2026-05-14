@@ -8,6 +8,15 @@ import Badge from "@/components/ui/Badge";
 import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
 import ModalEnrollWajah from "@/components/shared/ModalEnrollWajah";
+import {
+ Camera,
+ Check,
+ SquarePen,
+ SwitchCamera,
+ Trash,
+ TriangleAlert,
+ UserRoundPlus,
+} from "lucide-react";
 
 export default function MahasiswaPage() {
  const [mahasiswa, setMahasiswa] = useState([]);
@@ -97,7 +106,13 @@ export default function MahasiswaPage() {
  return (
   <div>
    <PageHeader title="Kelola Mahasiswa & Wajah">
-    <Button onClick={handleOpenAdd}>+ Tambah Mahasiswa</Button>
+    <Button
+     onClick={handleOpenAdd}
+     className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 py-2 rounded-lg font-semibold transition-colors hover:bg-[#8000d4]"
+    >
+     <UserRoundPlus color="#fff" size={18} />
+     Tambah Mahasiswa
+    </Button>
    </PageHeader>
 
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
@@ -145,21 +160,48 @@ export default function MahasiswaPage() {
          >
           {item.nama}
          </td>
+         {/* <td className="px-5 py-3">
+          {item.isFaceEnrolled ? (
+           <Badge variant="success">
+            <Check size={16} color="#008E5D" />
+            Terekam
+           </Badge>
+          ) : (
+           <Badge variant="warning">
+            <TriangleAlert size={16} color="#f00048" />
+            Belum Direkam
+           </Badge>
+          )}
+         </td> */}
          <td className="px-5 py-3">
           {item.isFaceEnrolled ? (
-           <Badge variant="success">✓ Terekam</Badge>
+           <Badge
+            variant="success"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap"
+           >
+            <Check size={16} color="#008E5D" />
+            Terekam
+           </Badge>
           ) : (
-           <Badge variant="warning">⚠ Belum Direkam</Badge>
+           <Badge
+            variant="warning"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap"
+           >
+            <TriangleAlert size={16} color="#f00048" />
+            Belum Direkam
+           </Badge>
           )}
          </td>
+
          <td className="px-5 py-3">
           <div className="flex items-center gap-2">
            {!item.isFaceEnrolled ? (
             <Button
              onClick={() => setEnrollMhs(item)}
-             className="text-xs py-1.5"
+             className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 rounded-lg font-semibold transition-colors hover:bg-[#8000d4] text-xs py-1.5"
             >
-             📷 Rekam Wajah Sekarang
+             <Camera size={18} color="#fff" />
+             Rekam Wajah Sekarang
             </Button>
            ) : (
             <button
@@ -167,20 +209,20 @@ export default function MahasiswaPage() {
              className="text-gray-400 hover:text-purple-600"
              title="Rekam Ulang"
             >
-             📷
+             <SwitchCamera size={18} color="#5C00F1" />
             </button>
            )}
            <button
             onClick={() => handleOpenEdit(item)}
             className="text-gray-400 hover:text-purple-600"
            >
-            ✏️
+            <SquarePen size={18} color="#ffbb00" />
            </button>
            <button
             onClick={() => handleDelete(item.id)}
             className="text-gray-400 hover:text-red-500"
            >
-            🗑️
+            <Trash size={18} color="#f00048" />
            </button>
           </div>
          </td>
