@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import api from "@/lib/axios";
 import PageHeader from "@/components/ui/PageHeader";
 import { Trash } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 export default function RiwayatAdminPage() {
  const [jadwalList, setJadwalList] = useState([]);
@@ -164,7 +165,10 @@ export default function RiwayatAdminPage() {
      </div>
 
      {loadingRekap ? (
-      <div className="py-12 text-center text-gray-400">Memuat rekap...</div>
+      // <div className="py-12 text-center text-gray-400">Memuat rekap...</div>
+      <div>
+       <Spinner className="py-12 mx-auto" />
+      </div>
      ) : rekap.length === 0 ? (
       <div className="py-12 text-center text-gray-400">
        Belum ada sesi yang selesai.

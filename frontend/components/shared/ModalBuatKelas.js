@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
 import { Play, Zap } from "lucide-react";
+import Spinner from "../ui/Spinner";
 
 export default function ModalBuatKelas({ jadwalList, onClose, onBuka }) {
  const [selectedJadwalId, setSelectedJadwalId] = useState("");
@@ -11,7 +12,7 @@ export default function ModalBuatKelas({ jadwalList, onClose, onBuka }) {
  const [pertemuanTerpakai, setPertemuanTerpakai] = useState([]);
  const [loadingPertemuan, setLoadingPertemuan] = useState(false);
  const [jumlahSelesai, setJumlahSelesai] = useState(0);
-
+ const [pertemuanBerikutnya, setPertemuanBerikutnya] = useState(1);
  const selectedJadwal = jadwalList.find((j) => j.id === selectedJadwalId);
  const isDuplikat = pertemuanTerpakai.includes(Number(pertemuanKe));
 
@@ -27,7 +28,6 @@ export default function ModalBuatKelas({ jadwalList, onClose, onBuka }) {
    .then((res) => {
     const terpakai = res.data.map((s) => s.pertemuanKe);
     setPertemuanTerpakai(terpakai);
-    // Auto set ke pertemuan berikutnya
     const next = terpakai.length > 0 ? Math.max(...terpakai) + 1 : 1;
     setPertemuanKe(next);
    })
@@ -35,6 +35,27 @@ export default function ModalBuatKelas({ jadwalList, onClose, onBuka }) {
    .finally(() => setLoadingPertemuan(false));
  }, [selectedJadwalId]);
 
+ //  useEffect(() => {
+ //   if (!selectedJadwalId) {
+ //    setPertemuanTerpakai([]);
+ //    setJumlahSelesai(0);
+ //    return;
+ //   }
+ //   setLoadingPertemuan(true);
+ //   api
+ //    .get(`/presensi/sesi/${selectedJadwalId}/pertemuan`)
+ //    .then((res) => {
+ //     const selesai = res.data.filter((s) => s.statusSesi === "SELESAI");
+ //     const terpakai = res.data.map((s) => s.pertemuanKe);
+ //     setPertemuanTerpakai(terpakai);
+ //     setJumlahSelesai(selesai.length);
+ //     const next = selesai.length + 1;
+ //     setPertemuanBerikutnya(next);
+ //     setPertemuanKe(next);
+ //    })
+ //    .catch(() => setPertemuanTerpakai([]))
+ //    .finally(() => setLoadingPertemuan(false));
+ //  }, [selectedJadwalId]);
  useEffect(() => {
   if (!selectedJadwalId) {
    setPertemuanTerpakai([]);
@@ -45,11 +66,14 @@ export default function ModalBuatKelas({ jadwalList, onClose, onBuka }) {
   api
    .get(`/presensi/sesi/${selectedJadwalId}/pertemuan`)
    .then((res) => {
-    const selesai = res.data.filter((s) => s.statusSesi === "SELESAI");
-    const terpakai = res.data.map((s) => s.pertemuanKe);
+    const semua = res.data; // semua sesi, BERLANGSUNG maupun SELESAI
+    const selesai = semua.filter((s) => s.statusSesi === "SELESAI");
+    const terpakai = semua.map((s) => s.pertemuanKe);
     setPertemuanTerpakai(terpakai);
     setJumlahSelesai(selesai.length);
-    const next = terpakai.length > 0 ? Math.max(...terpakai) + 1 : 1;
+
+    // Next = total semua sesi + 1 (bukan hanya yang SELESAI)
+    const next = semua.length + 1;
     setPertemuanKe(next);
    })
    .catch(() => setPertemuanTerpakai([]))
@@ -109,34 +133,21 @@ export default function ModalBuatKelas({ jadwalList, onClose, onBuka }) {
        <label className="block text-sm font-medium text-gray-700 mb-1">
         Pertemuan Ke-
        </label>
-       <input
-        type="number"
-        min={1}
-        value={pertemuanKe}
-        onChange={(e) => setPertemuanKe(e.target.value)}
-        className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
-         isDuplikat
-          ? "border-red-400 focus:ring-red-400 bg-red-50"
-          : "border-gray-300 focus:ring-purple-500"
-        }`}
-        required
-       />
+       <div className="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-700 font-semibold">
+        {pertemuanKe}
+       </div>
+       {loadingPertemuan && (
+        // <p className="text-gray-400 text-xs mt-1">Memuat data...</p>
+        <Spinner className="py-8" />
+       )}
+       {selectedJadwalId && !loadingPertemuan && jumlahSelesai < 14 && (
+        <p className="text-gray-400 text-xs mt-1">
+         *Pertemuan yang belum diadakan
+        </p>
+       )}
        {jumlahSelesai >= 14 && (
         <p className="text-red-500 text-xs mt-1 font-semibold">
          ⚠ Batas maksimal 14 pertemuan sudah tercapai!
-        </p>
-       )}
-       {isDuplikat && (
-        <p className="text-red-500 text-xs mt-1">
-         ⚠ Pertemuan ke-{pertemuanKe} sudah pernah diadakan
-        </p>
-       )}
-       {loadingPertemuan && (
-        <p className="text-gray-400 text-xs mt-1">Memuat data...</p>
-       )}
-       {selectedJadwalId && !loadingPertemuan && (
-        <p className="text-gray-400 text-xs mt-1">
-         *Otomatis pertemuan ke-{pertemuanKe}
         </p>
        )}
       </div>
@@ -181,8 +192,8 @@ export default function ModalBuatKelas({ jadwalList, onClose, onBuka }) {
       </button>
       <button
        type="submit"
-       disabled={isDuplikat || !selectedJadwalId || jumlahSelesai >= 14}
-       className="flex-1 items-center justify-center px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+       disabled={!selectedJadwalId || jumlahSelesai >= 14 || loadingPertemuan}
+       className="flex-1 flex gap-1.5 items-center justify-center px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
        <Play size={16} color="#fff" />
        Buka Sesi Presensi

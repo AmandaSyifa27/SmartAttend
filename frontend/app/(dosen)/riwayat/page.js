@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
+import Spinner from "@/components/ui/Spinner";
 
 export default function RiwayatPage() {
  const [jadwalList, setJadwalList] = useState([]);
@@ -153,7 +154,8 @@ export default function RiwayatPage() {
      </div>
 
      {loadingRekap ? (
-      <div className="py-12 text-center text-gray-400">Memuat rekap...</div>
+      // <div className="py-12 text-center text-gray-400">Memuat rekap...</div>
+      <Spinner className="py-12 mx-auto" />
      ) : rekap.length === 0 ? (
       <div className="py-12 text-center text-gray-400">
        Belum ada sesi yang selesai.

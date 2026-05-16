@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import api from "@/lib/axios";
 import ModalBuatKelas from "@/components/shared/ModalBuatKelas";
 import { CalendarFold, Clock, Play, Zap } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 export default function BerandaDosenPage() {
  const router = useRouter();
@@ -101,7 +102,10 @@ export default function BerandaDosenPage() {
    </div>
 
    {loading ? (
-    <p className="text-gray-400 text-sm py-8 text-center">Memuat jadwal...</p>
+    // <p className="text-gray-400 text-sm py-8 text-center">Memuat jadwal...</p>
+    <div className="  py-8 text-center">
+     <Spinner className="py-2" /> Memuat jadwal
+    </div>
    ) : jadwalHariIni.length === 0 ? (
     <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-400 text-sm mb-6">
      Tidak ada jadwal hari ini.

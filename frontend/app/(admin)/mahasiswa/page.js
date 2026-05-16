@@ -17,6 +17,7 @@ import {
  TriangleAlert,
  UserRoundPlus,
 } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 export default function MahasiswaPage() {
  const [mahasiswa, setMahasiswa] = useState([]);
@@ -138,7 +139,8 @@ export default function MahasiswaPage() {
       {loading ? (
        <tr>
         <td colSpan={4} className="text-center py-8 text-gray-400">
-         Memuat data...
+         {/* Memuat data... */}
+         <Spinner className="py-8" />
         </td>
        </tr>
       ) : filtered.length === 0 ? (

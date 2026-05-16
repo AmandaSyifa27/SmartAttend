@@ -202,7 +202,10 @@ export default function ModalEnrollWajah({ mahasiswa, onClose, onSuccess }) {
          <Camera size={18} color="#fff" strokeWidth={2.5} /> Aktifkan Kamera
         </>
        ) : (
-        "Memuat Model..."
+        <>
+         <Spinner className="py-2" />
+         "Memuat Model"
+        </>
        )}
       </button>
      ) : (

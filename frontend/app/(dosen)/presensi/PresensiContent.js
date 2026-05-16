@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/lib/axios";
 import * as faceapi from "face-api.js";
 import { Camera, Check, ChevronLeft, MonitorCheck, Play } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 export default function PresensiContent() {
  const router = useRouter();
@@ -303,7 +304,8 @@ export default function PresensiContent() {
  if (loading) {
   return (
    <div className="flex items-center justify-center h-64">
-    <p className="text-gray-400">Memuat data...</p>
+    {/* <p className="text-gray-400">Memuat data...</p> */}
+    <Spinner className="py-8" />
    </div>
   );
  }
@@ -435,9 +437,11 @@ export default function PresensiContent() {
          <p className="text-red-400 text-sm px-4 text-center">{kameraError}</p>
         )}
         <p className="text-gray-400 text-sm">
-         {modelLoaded
-          ? "Model siap. Aktifkan kamera."
-          : "Memuat model face-api.js..."}
+         {modelLoaded ? (
+          "Model siap. Aktifkan kamera."
+         ) : (
+          <Spinner className="py-2" />
+         )}
         </p>
         {modelLoaded && (
          <button
@@ -480,7 +484,7 @@ export default function PresensiContent() {
      </span>
     </div>
 
-    <div className="p-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+    <div className="p-3 border-b border-gray-100 flex items-center justify-between shrink-0">
      <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
       <input
        type="checkbox"

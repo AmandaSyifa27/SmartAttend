@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
 import { SquarePen, Trash, UserPlus } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 export default function DataDosenPage() {
  const [dosen, setDosen] = useState([]);
@@ -123,7 +124,8 @@ export default function DataDosenPage() {
       {loading ? (
        <tr>
         <td colSpan={4} className="text-center py-8 text-gray-400">
-         Memuat data...
+         {/* Memuat data... */}
+         <Spinner className="py-8" />
         </td>
        </tr>
       ) : filtered.length === 0 ? (

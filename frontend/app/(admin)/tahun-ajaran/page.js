@@ -7,6 +7,7 @@ import Badge from "@/components/ui/Badge";
 import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
 import { CalendarPlus, SquarePen } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 export default function TahunAjaranPage() {
  const [data, setData] = useState([]);
@@ -100,7 +101,8 @@ export default function TahunAjaranPage() {
       {loading ? (
        <tr>
         <td colSpan={4} className="text-center py-8 text-gray-400">
-         Memuat data...
+         {/* Memuat data... */}
+         <Spinner className="py-8" />
         </td>
        </tr>
       ) : data.length === 0 ? (

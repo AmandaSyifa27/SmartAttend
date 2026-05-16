@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
 import { BookPlus, SquarePen, Trash } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 export default function MataKuliahPage() {
  const [mataKuliah, setMataKuliah] = useState([]);
@@ -113,7 +114,8 @@ export default function MataKuliahPage() {
       {loading ? (
        <tr>
         <td colSpan={4} className="text-center py-8 text-gray-400">
-         Memuat data...
+         {/* Memuat data... */}
+         <Spinner className="py-8" />
         </td>
        </tr>
       ) : filtered.length === 0 ? (

@@ -13,6 +13,7 @@ import {
  User,
  Users,
 } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 const HARI = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
@@ -44,6 +45,7 @@ export default function JadwalPage() {
  const [selectedJadwal, setSelectedJadwal] = useState(null);
  const [selectedMhsIds, setSelectedMhsIds] = useState([]);
  const [searchMhs, setSearchMhs] = useState("");
+ const [pilihSemuaPeserta, setPilihSemuaPeserta] = useState(false);
 
  const fetchAll = async () => {
   try {
@@ -143,6 +145,19 @@ export default function JadwalPage() {
   );
  };
 
+ const handlePilihSemuaPeserta = (checked) => {
+  setPilihSemuaPeserta(checked);
+  if (checked) {
+   // Pilih semua yang muncul setelah filter search
+   const idsFiltered = filteredMhs.map((m) => m.id);
+   setSelectedMhsIds((prev) => [...new Set([...prev, ...idsFiltered])]);
+  } else {
+   // Hapus semua yang muncul di filter dari selection
+   const idsFiltered = new Set(filteredMhs.map((m) => m.id));
+   setSelectedMhsIds((prev) => prev.filter((id) => !idsFiltered.has(id)));
+  }
+ };
+
  const handleSimpanPeserta = async () => {
   try {
    await api.patch(`/jadwal/${selectedJadwal.id}/peserta`, {
@@ -184,20 +199,6 @@ export default function JadwalPage() {
      Buat Jadwal Master
     </Button>
    </PageHeader>
-   {/* <div className="flex items-center justify-between mb-4">
-    <div>
-     <h1 className="text-2xl font-bold text-gray-800">
-      Jadwal & Peserta (KRS)
-     </h1>
-     <p className="text-sm text-gray-500">Menampilkan jadwal untuk T.A Aktif</p>
-    </div>
-    <button
-     onClick={handleOpenAdd}
-     className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2"
-    >
-     📅 Buat Jadwal Master
-    </button>
-   </div> */}
 
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
     {/* Filter */}
@@ -243,7 +244,8 @@ export default function JadwalPage() {
       {loading ? (
        <tr>
         <td colSpan={4} className="text-center py-8 text-gray-400">
-         Memuat data...
+         {/* Memuat data... */}
+         <Spinner className="py-8" />
         </td>
        </tr>
       ) : filtered.length === 0 ? (
@@ -507,13 +509,27 @@ export default function JadwalPage() {
       </div>
 
       {/* Search */}
-      <input
-       type="text"
-       placeholder="Cari NIM atau Nama..."
-       value={searchMhs}
-       onChange={(e) => setSearchMhs(e.target.value)}
-       className="w-full text-gray-700 border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 mb-3"
-      />
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3">
+       <input
+        type="text"
+        placeholder="Cari NIM atau Nama..."
+        value={searchMhs}
+        onChange={(e) => {
+         setSearchMhs(e.target.value);
+         setPilihSemuaPeserta(false);
+        }}
+        className="w-full max-w-md text-gray-700 border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+       />
+       <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer whitespace-nowrap">
+        <input
+         type="checkbox"
+         checked={pilihSemuaPeserta}
+         onChange={(e) => handlePilihSemuaPeserta(e.target.checked)}
+         className="accent-purple-600 w-4 h-4"
+        />
+        Pilih Semua
+       </label>
+      </div>
 
       {/* List Mahasiswa */}
       <div className="max-h-64 overflow-y-auto space-y-2 mb-4">
