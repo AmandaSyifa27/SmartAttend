@@ -6,6 +6,7 @@ import api from "@/lib/axios";
 import * as faceapi from "face-api.js";
 import { Camera, Check, ChevronLeft, MonitorCheck, Play } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
+import Alert from "@/components/ui/Alert";
 
 export default function PresensiContent() {
  const router = useRouter();
@@ -31,6 +32,12 @@ export default function PresensiContent() {
  const [jadwalInfo, setJadwalInfo] = useState(null);
  const [sesiDibuka, setSesiDibuka] = useState(false);
  const [pilihSemua, setPilihSemua] = useState(false);
+ const sesiId = searchParams.get("sesiId");
+ const [alertInfo, setAlertInfo] = useState({
+  show: false,
+  message: "",
+  type: "info",
+ });
 
  // Cleanup saat unmount
  useEffect(() => {
@@ -61,13 +68,17 @@ export default function PresensiContent() {
   });
  }, [kameraAktif]);
 
+ const showAlert = (message, type = "info") => {
+  setAlertInfo({ show: true, message, type });
+ };
+
  const fetchJadwalInfo = async () => {
   try {
    const res = await api.get(`/jadwal/${jadwalId}`);
    setJadwalInfo(res.data);
   } catch (err) {
    console.error(err);
-   alert("Gagal memuat data jadwal");
+   showAlert("Gagal memuat data jadwal", "error");
    router.push("/beranda");
   } finally {
    setLoading(false);
@@ -77,24 +88,38 @@ export default function PresensiContent() {
  const handleBukaSesi = async () => {
   setLoading(true);
   try {
-   const res = await api.post("/presensi/sesi", {
-    jadwalId,
-    pertemuanKe,
-    tipeKelas: tipe,
-   });
-   setSesi(res.data.data);
-   const mhsList = res.data.data.jadwal.mahasiswa;
-   setMahasiswaList(mhsList);
-   const defaultKehadiran = {};
-   mhsList.forEach((m) => {
-    defaultKehadiran[m.id] = tipe === "ONLINE" ? "HADIR" : "ALPA";
-   });
-   setKehadiran(defaultKehadiran);
-   setSesiDibuka(true);
+   let sesiData;
+
+   if (sesiId) {
+    const res = await api.get(`/jadwal/${jadwalId}`);
+    const mhsList = res.data.mahasiswa || [];
+    setMahasiswaList(mhsList);
+    const defaultKehadiran = {};
+    mhsList.forEach((m) => {
+     defaultKehadiran[m.id] = tipe === "ONLINE" ? "HADIR" : "ALPA";
+    });
+    setKehadiran(defaultKehadiran);
+    setSesi({ id: sesiId, statusSesi: "BERLANGSUNG", jadwal: res.data });
+    setSesiDibuka(true);
+   } else {
+    const res = await api.post("/presensi/sesi", {
+     jadwalId,
+     pertemuanKe,
+     tipeKelas: tipe,
+    });
+    setSesi(res.data.data);
+    const mhsList = res.data.data.jadwal.mahasiswa;
+    setMahasiswaList(mhsList);
+    const defaultKehadiran = {};
+    mhsList.forEach((m) => {
+     defaultKehadiran[m.id] = tipe === "ONLINE" ? "HADIR" : "ALPA";
+    });
+    setKehadiran(defaultKehadiran);
+    setSesiDibuka(true);
+   }
   } catch (err) {
-   const msg = err.response?.data?.message || "Gagal membuka sesi";
-   alert(msg);
-   // FIX: jangan lanjut ke sesi kalau pertemuan sudah ada
+   //  const msg = err.response?.data?.message || "Gagal membuka sesi";
+   showAlert(err.response?.data?.message || "Gagal membuka sesi", "error");
    router.push("/beranda");
   } finally {
    setLoading(false);
@@ -110,12 +135,6 @@ export default function PresensiContent() {
   });
   setKehadiran(updated);
  };
-
- //  const handleKembali = () => {
- //   if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
- //   if (deteksiIntervalRef.current) clearInterval(deteksiIntervalRef.current);
- //   router.push("/beranda");
- //  };
 
  const handleKembali = async () => {
   // hapus sesi kalau belum dikonfirmasi
@@ -145,7 +164,7 @@ export default function PresensiContent() {
     setModelLoaded(true);
    } catch (e) {
     console.error("Gagal load model:", e);
-    alert("Gagal memuat model face-api.js.");
+    showAlert("Gagal memuat model face-api.js.", "error");
    }
   };
   loadModels();
@@ -167,13 +186,6 @@ export default function PresensiContent() {
   observer.observe(video);
   return () => observer.disconnect();
  }, []);
- //  const handleVideoPlay = useCallback(() => {
- //   const video = videoRef.current;
- //   const canvas = canvasRef.current;
- //   if (!video || !canvas) return;
- //   canvas.width = video.videoWidth;
- //   canvas.height = video.videoHeight;
- //  }, []);
 
  const startKamera = async () => {
   setKameraError("");
@@ -186,7 +198,7 @@ export default function PresensiContent() {
     },
    });
    streamRef.current = stream;
-   setKameraAktif(true); // useEffect akan set srcObject
+   setKameraAktif(true);
    startDeteksi();
   } catch (err) {
    console.error("Kamera error:", err);
@@ -245,7 +257,6 @@ export default function PresensiContent() {
      const h = box.height * scaleY;
 
      const isKnown = bestMatch !== null;
-     // Hijau kalau terdeteksi, merah kalau unknown
      const color = isKnown ? "#22c55e" : "#ef4444";
 
      ctx.strokeStyle = color;
@@ -282,13 +293,13 @@ export default function PresensiContent() {
     status,
    }));
    await api.post(`/presensi/sesi/${sesi.id}/submit`, { kehadiran: payload });
-   alert("Kehadiran berhasil disimpan!");
+   showAlert("Kehadiran berhasil disimpan!", "success");
    if (streamRef.current)
     streamRef.current.getTracks().forEach((t) => t.stop());
    if (deteksiIntervalRef.current) clearInterval(deteksiIntervalRef.current);
    router.push("/riwayat");
   } catch (err) {
-   alert(err.response?.data?.message || "Gagal menyimpan");
+   showAlert(err.response?.data?.message || "Gagal menyimpan", "error");
   } finally {
    setSubmitting(false);
   }
@@ -304,7 +315,6 @@ export default function PresensiContent() {
  if (loading) {
   return (
    <div className="flex items-center justify-center h-64">
-    {/* <p className="text-gray-400">Memuat data...</p> */}
     <Spinner className="py-8" />
    </div>
   );
@@ -436,13 +446,13 @@ export default function PresensiContent() {
         {kameraError && (
          <p className="text-red-400 text-sm px-4 text-center">{kameraError}</p>
         )}
-        <p className="text-gray-400 text-sm">
+        <div>
          {modelLoaded ? (
-          "Model siap. Aktifkan kamera."
+          <p className="text-gray-400 text-sm">Model siap. Aktifkan kamera.</p>
          ) : (
           <Spinner className="py-2" />
          )}
-        </p>
+        </div>
         {modelLoaded && (
          <button
           onClick={startKamera}
@@ -560,6 +570,12 @@ export default function PresensiContent() {
      </button>
     </div>
    </div>
+   <Alert
+    show={alertInfo.show}
+    message={alertInfo.message}
+    type={alertInfo.type}
+    onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
   </div>
  );
 }

@@ -8,6 +8,7 @@ import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
 import { BookPlus, SquarePen, Trash } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
+import Alert from "@/components/ui/Alert";
 
 export default function MataKuliahPage() {
  const [mataKuliah, setMataKuliah] = useState([]);
@@ -17,6 +18,11 @@ export default function MataKuliahPage() {
  const [editData, setEditData] = useState(null);
  const [form, setForm] = useState({ kode: "", nama: "", sks: "" });
  const [error, setError] = useState("");
+ const [alertInfo, setAlertInfo] = useState({
+  show: false,
+  message: "",
+  type: "info",
+ });
 
  const fetchMataKuliah = async () => {
   try {
@@ -47,14 +53,20 @@ export default function MataKuliahPage() {
   setShowModal(true);
  };
 
+ const showAlert = (message, type = "info") => {
+  setAlertInfo({ show: true, message, type });
+ };
+
  const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
   try {
    if (editData) {
     await api.put(`/mata-kuliah/${editData.id}`, form);
+    showAlert("Mata kuliah berhasil diupdate", "info");
    } else {
     await api.post("/mata-kuliah", form);
+    showAlert("Mata kuliah berhasil ditambahkan", "success");
    }
    setShowModal(false);
    fetchMataKuliah();
@@ -67,9 +79,10 @@ export default function MataKuliahPage() {
   if (!confirm("Yakin ingin menghapus mata kuliah ini?")) return;
   try {
    await api.delete(`/mata-kuliah/${id}`);
+   showAlert("Mata kuliah berhasil dihapus", "warning");
    fetchMataKuliah();
   } catch (err) {
-   alert(err.response?.data?.message || "Gagal menghapus");
+   showAlert(err.response?.data?.message || "Gagal menghapus", "error");
   }
  };
 
@@ -211,6 +224,12 @@ export default function MataKuliahPage() {
      </div>
     </div>
    )}
+   <Alert
+    show={alertInfo.show}
+    message={alertInfo.message}
+    type={alertInfo.type}
+    onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
   </div>
  );
 }

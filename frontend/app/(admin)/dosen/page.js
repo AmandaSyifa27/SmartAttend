@@ -8,6 +8,7 @@ import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
 import { SquarePen, Trash, UserPlus } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
+import Alert from "@/components/ui/Alert";
 
 export default function DataDosenPage() {
  const [dosen, setDosen] = useState([]);
@@ -22,6 +23,11 @@ export default function DataDosenPage() {
   password: "",
  });
  const [error, setError] = useState("");
+ const [alertInfo, setAlertInfo] = useState({
+  show: false,
+  message: "",
+  type: "info",
+ });
 
  const fetchDosen = async () => {
   try {
@@ -57,19 +63,26 @@ export default function DataDosenPage() {
   setShowModal(true);
  };
 
+ const showAlert = (message, type = "info") => {
+  setAlertInfo({ show: true, message, type });
+ };
+
  const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
   try {
    if (editData) {
     await api.put(`/dosen/${editData.id}`, form);
+    showAlert("Dosen berhasil diupdate", "info");
    } else {
     await api.post("/dosen", form);
+    showAlert("Dosen berhasil ditambahkan", "success");
    }
    setShowModal(false);
    fetchDosen();
   } catch (err) {
    setError(err.response?.data?.message || "Terjadi kesalahan");
+   showAlert(err.response?.data?.message || "Terjadi kesalahan", "error");
   }
  };
 
@@ -77,9 +90,10 @@ export default function DataDosenPage() {
   if (!confirm("Yakin ingin menghapus dosen ini?")) return;
   try {
    await api.delete(`/dosen/${id}`);
+   showAlert("Dosen berhasil dihapus", "warning");
    fetchDosen();
   } catch (err) {
-   alert(err.response?.data?.message || "Gagal menghapus");
+   showAlert(err.response?.data?.message || "Gagal menghapus", "error");
   }
  };
 
@@ -230,6 +244,12 @@ export default function DataDosenPage() {
      </div>
     </div>
    )}
+   <Alert
+    show={alertInfo.show}
+    message={alertInfo.message}
+    type={alertInfo.type}
+    onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
   </div>
  );
 }

@@ -9,18 +9,21 @@ const {
  updateKehadiran,
  getRekapAdmin,
  hapusSesiAdmin,
+ getSesiBerlangsung,
 } = require("../controllers/presensi.controller");
 const { verifyToken } = require("../middlewares/auth.middleware");
 const { verifyRole } = require("../middlewares/role.middleware");
 
-router.post("/sesi", verifyToken, verifyRole("dosen"), bukaSesi);
+// router.post("/sesi", verifyToken, verifyRole("dosen"), bukaSesi);
 router.get("/sesi/:jadwalId/pertemuan", verifyToken, getPertemuanByJadwal);
-router.post(
- "/sesi/:sesiId/submit",
- verifyToken,
- verifyRole("dosen"),
- submitBatch,
-);
+router.get("/sesi/:jadwalId/berlangsung", verifyToken, getSesiBerlangsung);
+// router.post(
+//  "/sesi/:sesiId/submit",
+//  verifyToken,
+//  verifyRole("dosen"),
+//  submitBatch,
+// );
+router.post("/submit", verifyToken, verifyRole("dosen"), submitBatch);
 router.delete(
  "/sesi/:sesiId",
  verifyToken,

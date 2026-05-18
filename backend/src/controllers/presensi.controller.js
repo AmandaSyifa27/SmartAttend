@@ -65,39 +65,98 @@ const getPertemuanByJadwal = async (req, res) => {
  }
 };
 
+// const submitBatch = async (req, res) => {
+//  const { sesiId } = req.params;
+//  const { kehadiran } = req.body;
+//  try {
+//   const sesi = await prisma.sesiPertemuan.findUnique({ where: { id: sesiId } });
+//   if (!sesi) return res.status(404).json({ message: "Sesi tidak ditemukan" });
+//   if (sesi.statusSesi === "SELESAI") {
+//    return res
+//     .status(400)
+//     .json({ message: "Sesi sudah selesai, tidak bisa submit ulang" });
+//   }
+//   const catatanHadir = await prisma.catatanHadir.createMany({
+//    data: kehadiran.map((item) => ({
+//     sesiId,
+//     mahasiswaId: item.mahasiswaId,
+//     status: item.status,
+//     waktuAbsen: new Date(),
+//    })),
+//   });
+//   await prisma.sesiPertemuan.update({
+//    where: { id: sesiId },
+//    data: { statusSesi: "SELESAI", waktuTutup: new Date() },
+//   });
+//   res.json({
+//    message: "Kehadiran berhasil disimpan",
+//    total: catatanHadir.count,
+//   });
+//  } catch (err) {
+//   res.status(500).json({ message: "Server error", error: err.message });
+//  }
+// };
+
 const submitBatch = async (req, res) => {
- const { sesiId } = req.params;
- const { kehadiran } = req.body;
+ const { jadwalId, pertemuanKe, tipeKelas, kehadiran } = req.body;
+
  try {
-  const sesi = await prisma.sesiPertemuan.findUnique({ where: { id: sesiId } });
-  if (!sesi) return res.status(404).json({ message: "Sesi tidak ditemukan" });
-  if (sesi.statusSesi === "SELESAI") {
+  const existing = await prisma.sesiPertemuan.findUnique({
+   where: { jadwalId_pertemuanKe: { jadwalId, pertemuanKe } },
+  });
+  if (existing) {
+   return res.status(400).json({
+    message: `Pertemuan ke-${pertemuanKe} sudah pernah diadakan`,
+   });
+  }
+
+  const jumlah = await prisma.sesiPertemuan.count({
+   where: { jadwalId, statusSesi: "SELESAI" },
+  });
+  if (jumlah >= 14) {
    return res
     .status(400)
-    .json({ message: "Sesi sudah selesai, tidak bisa submit ulang" });
+    .json({ message: "Batas maksimal 14 pertemuan sudah tercapai" });
   }
-  const catatanHadir = await prisma.catatanHadir.createMany({
+
+  const sesi = await prisma.sesiPertemuan.create({
+   data: {
+    jadwalId,
+    pertemuanKe,
+    tipeKelas,
+    statusSesi: "SELESAI",
+    waktuBuka: new Date(),
+    waktuTutup: new Date(),
+   },
+  });
+
+  await prisma.catatanHadir.createMany({
    data: kehadiran.map((item) => ({
-    sesiId,
+    sesiId: sesi.id,
     mahasiswaId: item.mahasiswaId,
     status: item.status,
     waktuAbsen: new Date(),
    })),
   });
-  await prisma.sesiPertemuan.update({
-   where: { id: sesiId },
-   data: { statusSesi: "SELESAI", waktuTutup: new Date() },
-  });
-  res.json({
-   message: "Kehadiran berhasil disimpan",
-   total: catatanHadir.count,
-  });
+
+  res.json({ message: "Kehadiran berhasil disimpan", total: kehadiran.length });
  } catch (err) {
   res.status(500).json({ message: "Server error", error: err.message });
  }
 };
 
-// Hapus sesi yang masih BERLANGSUNG (belum dikonfirmasi)
+const getSesiBerlangsung = async (req, res) => {
+ const { jadwalId } = req.params;
+ try {
+  const sesi = await prisma.sesiPertemuan.findFirst({
+   where: { jadwalId, statusSesi: "BERLANGSUNG" },
+  });
+  res.json(sesi);
+ } catch (err) {
+  res.status(500).json({ message: "Server error", error: err.message });
+ }
+};
+
 const hapusSesiBerlangsung = async (req, res) => {
  const { sesiId } = req.params;
  try {
@@ -135,7 +194,6 @@ const getRekap = async (req, res) => {
  }
 };
 
-// Admin update status kehadiran satu mahasiswa
 const updateKehadiran = async (req, res) => {
  const { catatanId } = req.params;
  const { status } = req.body;
@@ -150,7 +208,6 @@ const updateKehadiran = async (req, res) => {
  }
 };
 
-// Rekap untuk admin (semua jadwal)
 const getRekapAdmin = async (req, res) => {
  const { jadwalId } = req.params;
  try {
@@ -171,11 +228,9 @@ const getRekapAdmin = async (req, res) => {
  }
 };
 
-// admin hapus sesi
 const hapusSesiAdmin = async (req, res) => {
  const { sesiId } = req.params;
  try {
-  // Hapus catatan hadir dulu kalau ada
   await prisma.catatanHadir.deleteMany({ where: { sesiId } });
   await prisma.sesiPertemuan.delete({ where: { id: sesiId } });
   res.json({ message: "Sesi berhasil dihapus" });
@@ -193,4 +248,5 @@ module.exports = {
  updateKehadiran,
  getRekapAdmin,
  hapusSesiAdmin,
+ getSesiBerlangsung,
 };

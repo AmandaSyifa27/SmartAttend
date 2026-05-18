@@ -14,6 +14,7 @@ import {
  Users,
 } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
+import Alert from "@/components/ui/Alert";
 
 const HARI = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
@@ -25,6 +26,11 @@ export default function JadwalPage() {
  const [loading, setLoading] = useState(true);
  const [search, setSearch] = useState("");
  const [filterHari, setFilterHari] = useState("Semua");
+ const [alertInfo, setAlertInfo] = useState({
+  show: false,
+  message: "",
+  type: "info",
+ });
 
  // Modal Jadwal
  const [showModalJadwal, setShowModalJadwal] = useState(false);
@@ -100,19 +106,26 @@ export default function JadwalPage() {
   setShowModalJadwal(true);
  };
 
+ const showAlert = (message, type = "info") => {
+  setAlertInfo({ show: true, message, type });
+ };
+
  const handleSubmitJadwal = async (e) => {
   e.preventDefault();
   setError("");
   try {
    if (editData) {
     await api.put(`/jadwal/${editData.id}`, form);
+    showAlert("Jadwal berhasil diupdate", "info");
    } else {
     await api.post("/jadwal", form);
+    showAlert("Jadwal berhasil ditambahkan", "success");
    }
    setShowModalJadwal(false);
    fetchAll();
   } catch (err) {
-   setError(err.response?.data?.message || "Terjadi kesalahan");
+   //  setError(err.response?.data?.message || "Terjadi kesalahan");
+   showAlert(err.response?.data?.message || "Terjadi kesalahan", "error");
   }
  };
 
@@ -120,9 +133,10 @@ export default function JadwalPage() {
   if (!confirm("Yakin ingin menghapus jadwal ini?")) return;
   try {
    await api.delete(`/jadwal/${id}`);
+   showAlert("Jadwal berhasil dihapus", "warning");
    fetchAll();
   } catch (err) {
-   alert(err.response?.data?.message || "Gagal menghapus");
+   showAlert(err.response?.data?.message || "Gagal menghapus", "error");
   }
  };
 
@@ -163,10 +177,11 @@ export default function JadwalPage() {
    await api.patch(`/jadwal/${selectedJadwal.id}/peserta`, {
     mahasiswaIds: selectedMhsIds,
    });
+   showAlert("Peserta berhasil disimpan", "info");
    setShowModalPeserta(false);
    fetchAll();
   } catch (err) {
-   alert(err.response?.data?.message || "Gagal menyimpan peserta");
+   showAlert(err.response?.data?.message || "Gagal menyimpan peserta", "error");
   }
  };
 
@@ -585,6 +600,12 @@ export default function JadwalPage() {
      </div>
     </div>
    )}
+   <Alert
+    show={alertInfo.show}
+    message={alertInfo.message}
+    type={alertInfo.type}
+    onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
   </div>
  );
 }

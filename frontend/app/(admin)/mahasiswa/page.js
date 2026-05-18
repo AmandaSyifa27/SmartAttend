@@ -18,6 +18,7 @@ import {
  UserRoundPlus,
 } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
+import Alert from "@/components/ui/Alert";
 
 export default function MahasiswaPage() {
  const [mahasiswa, setMahasiswa] = useState([]);
@@ -35,6 +36,11 @@ export default function MahasiswaPage() {
   email: "",
  });
  const [error, setError] = useState("");
+ const [alertInfo, setAlertInfo] = useState({
+  show: false,
+  message: "",
+  type: "info",
+ });
 
  const fetchMahasiswa = async () => {
   try {
@@ -72,14 +78,20 @@ export default function MahasiswaPage() {
   setShowModal(true);
  };
 
+ const showAlert = (message, type = "info") => {
+  setAlertInfo({ show: true, message, type });
+ };
+
  const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
   try {
    if (editData) {
     await api.put(`/mahasiswa/${editData.id}`, form);
+    showAlert("Mahasiswa berhasil diupdate", "info");
    } else {
     await api.post("/mahasiswa", form);
+    showAlert("Mahasiswa berhasil ditambahkan", "success");
    }
    setShowModal(false);
    fetchMahasiswa();
@@ -92,9 +104,10 @@ export default function MahasiswaPage() {
   if (!confirm("Yakin ingin menghapus mahasiswa ini?")) return;
   try {
    await api.delete(`/mahasiswa/${id}`);
+   showAlert("Mahasiswa berhasil dihapus", "warning");
    fetchMahasiswa();
   } catch (err) {
-   alert(err.response?.data?.message || "Gagal menghapus");
+   showAlert(err.response?.data?.message || "Gagal menghapus", "error");
   }
  };
 
@@ -131,6 +144,7 @@ export default function MahasiswaPage() {
       <tr>
        <th className="px-5 py-3 text-left">NIM</th>
        <th className="px-5 py-3 text-left">Nama Mahasiswa</th>
+       <th className="px-5 py-3 text-left">Program Studi</th>
        <th className="px-5 py-3 text-left">Status Data Wajah</th>
        <th className="px-5 py-3 text-left">Aksi</th>
       </tr>
@@ -162,19 +176,11 @@ export default function MahasiswaPage() {
          >
           {item.nama}
          </td>
-         {/* <td className="px-5 py-3">
-          {item.isFaceEnrolled ? (
-           <Badge variant="success">
-            <Check size={16} color="#008E5D" />
-            Terekam
-           </Badge>
-          ) : (
-           <Badge variant="warning">
-            <TriangleAlert size={16} color="#f00048" />
-            Belum Direkam
-           </Badge>
-          )}
-         </td> */}
+         <td
+          className={`px-5 py-3 ${!item.isFaceEnrolled ? "font-semibold text-red-500" : "text-gray-700"}`}
+         >
+          {item.prodi}
+         </td>
          <td className="px-5 py-3">
           {item.isFaceEnrolled ? (
            <Badge
@@ -329,6 +335,12 @@ export default function MahasiswaPage() {
      onSuccess={fetchMahasiswa}
     />
    )}
+   <Alert
+    show={alertInfo.show}
+    message={alertInfo.message}
+    type={alertInfo.type}
+    onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
   </div>
  );
 }

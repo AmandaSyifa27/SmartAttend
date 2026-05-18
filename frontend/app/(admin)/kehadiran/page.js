@@ -5,6 +5,7 @@ import api from "@/lib/axios";
 import PageHeader from "@/components/ui/PageHeader";
 import { Trash } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
+import Alert from "@/components/ui/Alert";
 
 export default function RiwayatAdminPage() {
  const [jadwalList, setJadwalList] = useState([]);
@@ -13,6 +14,11 @@ export default function RiwayatAdminPage() {
  const [loadingJadwal, setLoadingJadwal] = useState(true);
  const [loadingRekap, setLoadingRekap] = useState(false);
  const [editingId, setEditingId] = useState(null);
+ const [alertInfo, setAlertInfo] = useState({
+  show: false,
+  message: "",
+  type: "info",
+ });
 
  useEffect(() => {
   api
@@ -38,7 +44,6 @@ export default function RiwayatAdminPage() {
   fetchRekap();
  }, [selectedJadwal]);
 
- // Ambil semua mahasiswa unik
  const mahasiswaMap = {};
  rekap.forEach((sesi) => {
   sesi.catatanHadir.forEach((c) => {
@@ -65,15 +70,22 @@ export default function RiwayatAdminPage() {
   return Math.round((hadir / rekap.length) * 100);
  };
 
+ const showAlert = (message, type = "info") => {
+  setAlertInfo({ show: true, message, type });
+ };
+
  const handleUpdateKehadiran = async (catatanId, statusBaru) => {
   try {
    await api.patch(`/presensi/catatan/${catatanId}`, { status: statusBaru });
-   // Refresh rekap
    const res = await api.get(`/presensi/admin/rekap/${selectedJadwal}`);
    setRekap(res.data);
+   showAlert("Kehadiran berhasil diubah", "info");
    setEditingId(null);
   } catch (err) {
-   alert(err.response?.data?.message || "Gagal mengubah kehadiran");
+   showAlert(
+    err.response?.data?.message || "Gagal mengubah kehadiran",
+    "error",
+   );
   }
  };
 
@@ -88,9 +100,10 @@ export default function RiwayatAdminPage() {
   try {
    await api.delete(`/presensi/admin/sesi/${sesiId}`);
    const res = await api.get(`/presensi/admin/rekap/${selectedJadwal}`);
+   showAlert("Pertemuan berhasil dihapus", "warning");
    setRekap(res.data);
   } catch (err) {
-   alert(err.response?.data?.message || "Gagal menghapus");
+   showAlert(err.response?.data?.message || "Gagal menghapus", "error");
   }
  };
 
@@ -283,6 +296,12 @@ export default function RiwayatAdminPage() {
      )}
     </div>
    )}
+   <Alert
+    show={alertInfo.show}
+    message={alertInfo.message}
+    type={alertInfo.type}
+    onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
   </div>
  );
 }

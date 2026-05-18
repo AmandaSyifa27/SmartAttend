@@ -8,6 +8,7 @@ import FormInput from "@/components/ui/FormInput";
 import PageHeader from "@/components/ui/PageHeader";
 import { CalendarPlus, SquarePen } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
+import Alert from "@/components/ui/Alert";
 
 export default function TahunAjaranPage() {
  const [data, setData] = useState([]);
@@ -16,6 +17,11 @@ export default function TahunAjaranPage() {
  const [editData, setEditData] = useState(null);
  const [form, setForm] = useState({ nama: "" });
  const [error, setError] = useState("");
+ const [alertInfo, setAlertInfo] = useState({
+  show: false,
+  message: "",
+  type: "info",
+ });
 
  const fetchData = async () => {
   try {
@@ -46,19 +52,26 @@ export default function TahunAjaranPage() {
   setShowModal(true);
  };
 
+ const showAlert = (message, type = "info") => {
+  setAlertInfo({ show: true, message, type });
+ };
+
  const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
   try {
    if (editData) {
     await api.put(`/tahun-ajaran/${editData.id}`, form);
+    showAlert("Tahun ajaran berhasil diupdate", "info");
    } else {
     await api.post("/tahun-ajaran", form);
+    showAlert("Tahun ajaran berhasil ditambahkan", "success");
    }
    setShowModal(false);
    fetchData();
   } catch (err) {
    setError(err.response?.data?.message || "Terjadi kesalahan");
+   showAlert("Gagal menyimpan tahun ajaran", "error");
   }
  };
 
@@ -66,9 +79,10 @@ export default function TahunAjaranPage() {
   if (!confirm("Set tahun ajaran ini sebagai aktif?")) return;
   try {
    await api.patch(`/tahun-ajaran/${id}/aktif`);
+   showAlert("Tahun ajaran berhasil diaktifkan", "info");
    fetchData();
   } catch (err) {
-   alert(err.response?.data?.message || "Gagal mengaktifkan");
+   showAlert(err.response?.data?.message || "Gagal mengaktifkan", "error");
   }
  };
 
@@ -198,6 +212,12 @@ export default function TahunAjaranPage() {
      </div>
     </div>
    )}
+   <Alert
+    show={alertInfo.show}
+    message={alertInfo.message}
+    type={alertInfo.type}
+    onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
   </div>
  );
 }
