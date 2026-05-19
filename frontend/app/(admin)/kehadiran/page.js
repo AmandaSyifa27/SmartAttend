@@ -6,6 +6,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import { Trash } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import Alert from "@/components/ui/Alert";
+import Confirm from "@/components/ui/Confirm";
 
 export default function RiwayatAdminPage() {
  const [jadwalList, setJadwalList] = useState([]);
@@ -18,6 +19,11 @@ export default function RiwayatAdminPage() {
   show: false,
   message: "",
   type: "info",
+ });
+ const [confirmInfo, setConfirmInfo] = useState({
+  show: false,
+  message: "",
+  onConfirm: null,
  });
 
  useEffect(() => {
@@ -91,12 +97,6 @@ export default function RiwayatAdminPage() {
 
  //  hapus sesi
  const handleHapusSesi = async (sesiId) => {
-  if (
-   !confirm(
-    "Yakin ingin menghapus pertemuan ini? Semua data kehadiran di pertemuan ini akan hilang.",
-   )
-  )
-   return;
   try {
    await api.delete(`/presensi/admin/sesi/${sesiId}`);
    const res = await api.get(`/presensi/admin/rekap/${selectedJadwal}`);
@@ -212,7 +212,16 @@ export default function RiwayatAdminPage() {
             <div className="flex flex-col items-center gap-0.5">
              <span>P{sesi.pertemuanKe}</span>
              <button
-              onClick={() => handleHapusSesi(sesi.id)}
+              onClick={() =>
+               setConfirmInfo({
+                show: true,
+                message: "Yakin ingin menghapus pertemuan ini?",
+                onConfirm: () => {
+                 setConfirmInfo((prev) => ({ ...prev, show: false }));
+                 handleDelete(item.id);
+                },
+               })
+              }
               className="text-red-400 hover:text-red-600 text-xs"
               title="Hapus pertemuan"
              >
@@ -301,6 +310,12 @@ export default function RiwayatAdminPage() {
     message={alertInfo.message}
     type={alertInfo.type}
     onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
+   <Confirm
+    show={confirmInfo.show}
+    message={confirmInfo.message}
+    onConfirm={confirmInfo.onConfirm}
+    onCancel={() => setConfirmInfo((prev) => ({ ...prev, show: false }))}
    />
   </div>
  );

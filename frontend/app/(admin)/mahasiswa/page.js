@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import Alert from "@/components/ui/Alert";
+import Confirm from "@/components/ui/Confirm";
 
 export default function MahasiswaPage() {
  const [mahasiswa, setMahasiswa] = useState([]);
@@ -40,6 +41,11 @@ export default function MahasiswaPage() {
   show: false,
   message: "",
   type: "info",
+ });
+ const [confirmInfo, setConfirmInfo] = useState({
+  show: false,
+  message: "",
+  onConfirm: null,
  });
 
  const fetchMahasiswa = async () => {
@@ -101,7 +107,6 @@ export default function MahasiswaPage() {
  };
 
  const handleDelete = async (id) => {
-  if (!confirm("Yakin ingin menghapus mahasiswa ini?")) return;
   try {
    await api.delete(`/mahasiswa/${id}`);
    showAlert("Mahasiswa berhasil dihapus", "warning");
@@ -227,7 +232,16 @@ export default function MahasiswaPage() {
             <SquarePen size={18} color="#ffbb00" />
            </button>
            <button
-            onClick={() => handleDelete(item.id)}
+            nClick={() =>
+             setConfirmInfo({
+              show: true,
+              message: "Yakin ingin menghapus mahasiswa ini?",
+              onConfirm: () => {
+               setConfirmInfo((prev) => ({ ...prev, show: false }));
+               handleDelete(item.id);
+              },
+             })
+            }
             className="text-gray-400 hover:text-red-500"
            >
             <Trash size={18} color="#f00048" />
@@ -340,6 +354,12 @@ export default function MahasiswaPage() {
     message={alertInfo.message}
     type={alertInfo.type}
     onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
+   <Confirm
+    show={confirmInfo.show}
+    message={confirmInfo.message}
+    onConfirm={confirmInfo.onConfirm}
+    onCancel={() => setConfirmInfo((prev) => ({ ...prev, show: false }))}
    />
   </div>
  );

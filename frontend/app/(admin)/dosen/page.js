@@ -9,6 +9,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import { SquarePen, Trash, UserPlus } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import Alert from "@/components/ui/Alert";
+import Confirm from "@/components/ui/Confirm";
 
 export default function DataDosenPage() {
  const [dosen, setDosen] = useState([]);
@@ -27,6 +28,11 @@ export default function DataDosenPage() {
   show: false,
   message: "",
   type: "info",
+ });
+ const [confirmInfo, setConfirmInfo] = useState({
+  show: false,
+  message: "",
+  onConfirm: null,
  });
 
  const fetchDosen = async () => {
@@ -87,7 +93,6 @@ export default function DataDosenPage() {
  };
 
  const handleDelete = async (id) => {
-  if (!confirm("Yakin ingin menghapus dosen ini?")) return;
   try {
    await api.delete(`/dosen/${id}`);
    showAlert("Dosen berhasil dihapus", "warning");
@@ -163,7 +168,16 @@ export default function DataDosenPage() {
             <SquarePen size={18} color="#ffbb00" />
            </button>
            <button
-            onClick={() => handleDelete(item.id)}
+            onClick={() =>
+             setConfirmInfo({
+              show: true,
+              message: "Yakin ingin menghapus dosen ini?",
+              onConfirm: () => {
+               setConfirmInfo((prev) => ({ ...prev, show: false }));
+               handleDelete(item.id);
+              },
+             })
+            }
             className="text-gray-400 hover:text-red-500"
            >
             <Trash size={18} color="#f00048" />
@@ -201,7 +215,7 @@ export default function DataDosenPage() {
        />
        <FormInput
         label="Nama"
-        placeholder="Muhammad Hatta, M.Kom."
+        placeholder="Jon Snow, M.Kom."
         value={form.nama}
         onChange={(e) => setForm({ ...form, nama: e.target.value })}
         required
@@ -249,6 +263,12 @@ export default function DataDosenPage() {
     message={alertInfo.message}
     type={alertInfo.type}
     onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
+   <Confirm
+    show={confirmInfo.show}
+    message={confirmInfo.message}
+    onConfirm={confirmInfo.onConfirm}
+    onCancel={() => setConfirmInfo((prev) => ({ ...prev, show: false }))}
    />
   </div>
  );

@@ -9,6 +9,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import { CalendarPlus, SquarePen } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import Alert from "@/components/ui/Alert";
+import Confirm from "@/components/ui/Confirm";
 
 export default function TahunAjaranPage() {
  const [data, setData] = useState([]);
@@ -21,6 +22,11 @@ export default function TahunAjaranPage() {
   show: false,
   message: "",
   type: "info",
+ });
+ const [confirmInfo, setConfirmInfo] = useState({
+  show: false,
+  message: "",
+  onConfirm: null,
  });
 
  const fetchData = async () => {
@@ -76,7 +82,7 @@ export default function TahunAjaranPage() {
  };
 
  const handleSetAktif = async (id) => {
-  if (!confirm("Set tahun ajaran ini sebagai aktif?")) return;
+  //   if (!confirm("Set tahun ajaran ini sebagai aktif?")) return;
   try {
    await api.patch(`/tahun-ajaran/${id}/aktif`);
    showAlert("Tahun ajaran berhasil diaktifkan", "info");
@@ -148,7 +154,17 @@ export default function TahunAjaranPage() {
             </button>
            ) : (
             <button
-             onClick={() => handleSetAktif(item.id)}
+             onClick={() =>
+              setConfirmInfo({
+               show: true,
+               message: "Set tahun ajaran ini sebagai aktif?",
+               onConfirm: () => {
+                setConfirmInfo((prev) => ({ ...prev, show: false }));
+                handleSetAktif(item.id);
+               },
+              })
+             }
+             //  onClick={() => handleSetAktif(item.id)}
              className="text-xs px-3 py-1.5 rounded-lg border border-purple-300 text-purple-600 hover:bg-purple-50"
             >
              Set Aktif
@@ -217,6 +233,13 @@ export default function TahunAjaranPage() {
     message={alertInfo.message}
     type={alertInfo.type}
     onClose={() => setAlertInfo((prev) => ({ ...prev, show: false }))}
+   />
+   <Confirm
+    show={confirmInfo.show}
+    message={confirmInfo.message}
+    onConfirm={confirmInfo.onConfirm}
+    confirmLabel="Ya, Set Aktif"
+    onCancel={() => setConfirmInfo((prev) => ({ ...prev, show: false }))}
    />
   </div>
  );
