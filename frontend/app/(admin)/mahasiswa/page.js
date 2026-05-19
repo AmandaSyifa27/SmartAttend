@@ -232,7 +232,7 @@ export default function MahasiswaPage() {
             <SquarePen size={18} color="#ffbb00" />
            </button>
            <button
-            nClick={() =>
+            onClick={() =>
              setConfirmInfo({
               show: true,
               message: "Yakin ingin menghapus mahasiswa ini?",
