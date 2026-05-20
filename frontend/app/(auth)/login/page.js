@@ -68,7 +68,7 @@ export default function LoginPage() {
     {/* Image placeholder */}
     {/* GANTI DIV INI DENGAN KOMPONEN IMAGE SESUAI MOCKUP */}
     <div className="w-full h-48 bg-purple-600 rounded-2xl flex items-center justify-center mb-8 z-10">
-     <span className="text-purple-300 text-sm">[Ilustrasi / Gambar]</span>
+     <span className="text-purple-300 text-sm">[Gambar apalah]</span>
     </div>
 
     <div className="bg-purple-600 rounded-xl p-4 flex items-center gap-3 z-10">

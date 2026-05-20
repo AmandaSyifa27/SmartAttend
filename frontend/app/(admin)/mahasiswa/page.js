@@ -280,14 +280,27 @@ export default function MahasiswaPage() {
          onChange={(e) => setForm({ ...form, nim: e.target.value })}
          required
         />
-        <FormInput
-         label="Angkatan"
-         type="number"
-         placeholder="2023"
-         value={form.angkatan}
-         onChange={(e) => setForm({ ...form, angkatan: e.target.value })}
-         required
-        />
+        <div>
+         <label className="block text-sm font-medium text-gray-700 mb-1">
+          Angkatan
+         </label>
+         <select
+          value={form.angkatan}
+          onChange={(e) => setForm({ ...form, angkatan: e.target.value })}
+          className="w-full text-gray-700 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+          required
+         >
+          <option value="">Pilih Angkatan</option>
+          {Array.from(
+           { length: 10 },
+           (_, i) => new Date().getFullYear() - i,
+          ).map((year) => (
+           <option key={year} value={year}>
+            {year}
+           </option>
+          ))}
+         </select>
+        </div>
        </div>
        <FormInput
         label="Nama"

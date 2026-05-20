@@ -46,7 +46,15 @@ const getById = async (req, res) => {
     dosen: { select: { id: true, nama: true, nidn: true } },
     mataKuliah: { select: { id: true, nama: true, kode: true } },
     tahunAjaran: { select: { id: true, nama: true } },
-    mahasiswa: { select: { id: true, nim: true, nama: true, kelas: true } },
+    mahasiswa: {
+     select: {
+      id: true,
+      nim: true,
+      nama: true,
+      kelas: true,
+      faceDescriptor: true,
+     },
+    },
     sesiPertemuan: { orderBy: { pertemuanKe: "asc" } },
    },
   });

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import * as faceapi from "face-api.js";
 import api from "@/lib/axios";
 import { Camera, Clapperboard } from "lucide-react";
+import Spinner from "../ui/Spinner";
 
 export default function ModalEnrollWajah({ mahasiswa, onClose, onSuccess }) {
  const videoRef = useRef(null);
