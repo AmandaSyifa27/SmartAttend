@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
  const router = useRouter();
- const [tab, setTab] = useState("admin");
+ const [tab, setTab] = useState("dosen");
  const [form, setForm] = useState({ email: "", nidn: "", password: "" });
  const [error, setError] = useState("");
  const [loading, setLoading] = useState(false);

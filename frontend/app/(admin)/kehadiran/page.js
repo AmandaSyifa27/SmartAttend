@@ -218,7 +218,7 @@ export default function RiwayatAdminPage() {
                 message: "Yakin ingin menghapus pertemuan ini?",
                 onConfirm: () => {
                  setConfirmInfo((prev) => ({ ...prev, show: false }));
-                 handleDelete(item.id);
+                 handleHapusSesi(sesi.id);
                 },
                })
               }

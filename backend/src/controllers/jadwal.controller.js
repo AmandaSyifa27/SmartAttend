@@ -157,16 +157,13 @@ const getJadwalDosen = async (req, res) => {
   }
 
   const data = await prisma.jadwalMaster.findMany({
-   where: {
-    dosenId,
-    tahunAjaranId: tahunAjaranAktif.id,
-   },
+   where: { dosenId, tahunAjaranId: tahunAjaranAktif.id },
    include: {
     mataKuliah: { select: { id: true, nama: true, kode: true } },
     _count: { select: { mahasiswa: true } },
     sesiPertemuan: {
-     orderBy: { pertemuanKe: "desc" },
-     take: 1,
+     select: { pertemuanKe: true, statusSesi: true },
+     orderBy: { pertemuanKe: "asc" },
     },
    },
   });

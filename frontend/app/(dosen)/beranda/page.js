@@ -52,9 +52,23 @@ export default function BerandaDosenPage() {
   return "selesai";
  };
 
+ //  const handleMulaiPresensi = (item) => {
+ //   const lastSesi = item.sesiPertemuan?.[0];
+ //   const pertemuanKe = lastSesi ? lastSesi.pertemuanKe + 1 : 1;
+ //   router.push(
+ //    `/presensi?jadwalId=${item.id}&pertemuanKe=${pertemuanKe}&tipe=OFFLINE`,
+ //   );
+ //  };
+
+ const getPertemuanBerikutnya = (item) => {
+  const terpakai = (item.sesiPertemuan || []).map((s) => s.pertemuanKe);
+  let next = 1;
+  while (terpakai.includes(next)) next++;
+  return next;
+ };
+
  const handleMulaiPresensi = (item) => {
-  const lastSesi = item.sesiPertemuan?.[0];
-  const pertemuanKe = lastSesi ? lastSesi.pertemuanKe + 1 : 1;
+  const pertemuanKe = getPertemuanBerikutnya(item);
   router.push(
    `/presensi?jadwalId=${item.id}&pertemuanKe=${pertemuanKe}&tipe=OFFLINE`,
   );
@@ -136,12 +150,15 @@ export default function BerandaDosenPage() {
              : "Selesai"}
          </span>
         </div>
-
+        mongosh
         <h3 className="font-bold text-gray-800 mb-1">
          {item.mataKuliah?.nama}
         </h3>
         <p className="text-gray-500 text-sm mb-1">
          Kelas {item.kelas} • {item._count?.mahasiswa} Mahasiswa
+        </p>
+        <p className="text-gray-500 text-sm mb-1">
+         Pertemuan Ke - {getPertemuanBerikutnya(item)}
         </p>
         <p className="text-gray-400 text-xs mb-1 flex items-center gap-1.5 mt-0.5">
          <Clock size={16} color="#5C00F1" />
