@@ -72,7 +72,7 @@ export default function LoginPage() {
     <div className="w-full h-48 bg-purple-600 rounded-2xl flex items-center justify-center mb-8 z-10">
      {/* <span className="text-purple-300 text-sm">[Gambar apalah]</span> */}
      <img
-      src="./logos/logo_ucic.png"
+      src="../../logos/logo_ucic.png"
       alt="Logo UCIC"
       className="w-full h-full object-contain"
      />
