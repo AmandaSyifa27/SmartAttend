@@ -5,6 +5,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { ScanFace } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
  const router = useRouter();
