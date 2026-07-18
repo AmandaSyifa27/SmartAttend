@@ -39,7 +39,8 @@ export default function AdminLayout({ children }) {
    return;
   }
   setUser(parsed);
-  fetch("http://localhost:5000/api/tahun-ajaran", {
+  // fetch("http://localhost:5000/api/tahun-ajaran", {
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/tahun-ajaran`, {
    headers: { Authorization: `Bearer ${token}` },
   })
    .then((res) => res.json())

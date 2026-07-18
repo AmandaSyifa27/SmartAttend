@@ -24,7 +24,8 @@ export default function LoginPage() {
      : { nidn: form.nidn, password: form.password, role: "dosen" };
 
    const res = await axios.post(
-    "http://localhost:5000/api/auth/login",
+    // "http://localhost:5000/api/auth/login",
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
     payload,
    );
 
