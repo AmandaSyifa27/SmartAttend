@@ -71,10 +71,12 @@ export default function LoginPage() {
     {/* GANTI DIV INI DENGAN KOMPONEN IMAGE SESUAI MOCKUP */}
     <div className="w-full h-48 bg-purple-600 rounded-2xl flex items-center justify-center mb-8 z-10">
      {/* <span className="text-purple-300 text-sm">[Gambar apalah]</span> */}
-     <img
-      src="../../logos/logo_ucic.png"
+     <Image
+      src="/logos/logo_ucic.png"
       alt="Logo UCIC"
-      className="w-full h-full object-contain"
+      width={200}
+      height={192}
+      className="object-contain"
      />
     </div>
 

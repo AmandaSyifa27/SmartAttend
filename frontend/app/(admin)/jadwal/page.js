@@ -149,6 +149,8 @@ export default function JadwalPage() {
   setSelectedJadwal(item);
   setSearchMhs("");
   setPilihSemuaPeserta(false);
+  setselectedMhsIds([]);
+  setshowModalPeserta(true);
   // Ambil peserta yang sudah terdaftar
   try {
    const res = await api.get(`/jadwal/${item.id}`);
