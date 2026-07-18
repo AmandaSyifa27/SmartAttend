@@ -174,7 +174,7 @@ export default function DashboardPage() {
        <button
         key={item.no}
         onClick={() => router.push(item.href)}
-        className="w-full flex items-center gap-4 px-4 py-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors text-left cursor-pointer"
+        className="w-full flex items-center gap-4 px-4 py-3 rounded-lg border border-gray-100 transition-colors text-left cursor-pointer hover:shadow-md hover:border-purple-200 transition-all"
        >
         <span className="w-7 h-7 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-sm font-bold shrink-0">
          {item.no}

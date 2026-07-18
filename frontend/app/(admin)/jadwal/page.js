@@ -583,7 +583,7 @@ export default function JadwalPage() {
            <p className="text-xs text-orange-500">⚠ Wajah Belum Direkam</p>
           )}
          </div>
-         <div
+         {/* <div
           className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 ${
            selectedMhsIds.includes(mhs.id)
             ? "bg-purple-600 border-purple-600"
@@ -593,7 +593,14 @@ export default function JadwalPage() {
           {selectedMhsIds.includes(mhs.id) && (
            <span className="text-white text-xs">✓</span>
           )}
-         </div>
+         </div> */}
+         <input
+          type="checkbox"
+          checked={selectedMhsIds.includes(mhs.id)}
+          onChange={() => handleToggleMhs(mhs.id)}
+          onClick={(e) => e.stopPropagation()}
+          className="accent-purple-600 w-4 h-4 cursor-pointer shrink-0"
+         />
         </div>
        ))}
       </div>
