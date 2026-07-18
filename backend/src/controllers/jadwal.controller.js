@@ -131,10 +131,13 @@ const updatePeserta = async (req, res) => {
   const data = await prisma.jadwalMaster.update({
    where: { id },
    data: {
-    mahasiswaIds,
+    mahasiswaIds: mahasiswaIds,
     mahasiswa: {
      set: mahasiswaIds.map((mhsId) => ({ id: mhsId })),
     },
+   },
+   include: {
+    _count: { select: { mahasiswa: true } },
    },
   });
   res.json({ message: "Peserta berhasil diupdate", data });

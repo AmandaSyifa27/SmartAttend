@@ -148,6 +148,7 @@ export default function JadwalPage() {
  const handleOpenPeserta = async (item) => {
   setSelectedJadwal(item);
   setSearchMhs("");
+  setPilihSemuaPeserta(false);
   // Ambil peserta yang sudah terdaftar
   try {
    const res = await api.get(`/jadwal/${item.id}`);
@@ -184,7 +185,7 @@ export default function JadwalPage() {
    });
    showAlert("Peserta berhasil disimpan", "info");
    setShowModalPeserta(false);
-   fetchAll();
+   await fetchAll();
   } catch (err) {
    showAlert(err.response?.data?.message || "Gagal menyimpan peserta", "error");
   }
