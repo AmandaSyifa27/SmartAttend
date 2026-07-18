@@ -80,7 +80,7 @@ export default function LoginPage() {
 
     <div className="bg-purple-600 rounded-xl p-4 flex items-center gap-3 z-10">
      <div className="w-10 h-10 bg-purple-400 rounded-lg flex items-center justify-center text-xl shrink-0">
-      <ScanFace size={24} color="#f0bb28" />
+      <ScanFace size={30} color="#f0bb28" strokeWidth={3} />
      </div>
      <div>
       <p className="font-semibold text-sm">Pemrosesan Real-time</p>
