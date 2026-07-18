@@ -149,16 +149,15 @@ export default function JadwalPage() {
   setSelectedJadwal(item);
   setSearchMhs("");
   setPilihSemuaPeserta(false);
-  setselectedMhsIds([]);
-  setshowModalPeserta(true);
-  // Ambil peserta yang sudah terdaftar
+  setSelectedMhsIds([]);
+  setShowModalPeserta(true);
+
   try {
    const res = await api.get(`/jadwal/${item.id}`);
    setSelectedMhsIds(res.data.mahasiswaIds || []);
   } catch {
    setSelectedMhsIds([]);
   }
-  setShowModalPeserta(true);
  };
 
  const handleToggleMhs = (id) => {
