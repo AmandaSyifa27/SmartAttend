@@ -309,13 +309,26 @@ export default function MahasiswaPage() {
         onChange={(e) => setForm({ ...form, nama: e.target.value })}
         required
        />
-       <FormInput
+       {/* <FormInput
         label="Program Studi"
         placeholder="Teknik Informatika"
         value={form.prodi}
         onChange={(e) => setForm({ ...form, prodi: e.target.value })}
         required
-       />
+       /> */}
+       <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+         Program Studi
+        </label>
+        <select
+         value={form.prodi}
+         onChange={(e) => setForm({ ...form, prodi: e.target.value })}
+         className="text-gray-700 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+         required
+        >
+         <option value="Teknik Informatika">Teknik Informatika</option>
+        </select>
+       </div>
        <FormInput
         label="Kelas"
         placeholder="TI-6A"

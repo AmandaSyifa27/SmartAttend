@@ -305,12 +305,13 @@ export default function JadwalPage() {
          <td className="px-5 py-3">
           <span
            className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold ${
-            item._count?.mahasiswa > 0
+            (item.mahasiswaIds?.length || 0) > 0
              ? "bg-green-100 text-green-700"
              : "bg-red-100 text-red-500"
            }`}
           >
-           {item._count?.mahasiswa || 0}
+           {/* {item._count?.mahasiswa || 0} */}
+           {item.mahasiswaIds?.length || 0}
           </span>
          </td>
          <td className="px-5 py-3">

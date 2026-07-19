@@ -40,7 +40,7 @@ export default function DosenLayout({ children }) {
   setMounted(true);
 
   // fetch("http://localhost:5000/api/tahun-ajaran", {
-  fetch(`${process.env.NEXT_PUBLI_API_URL}/tahun-ajaran`, {
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/tahun-ajaran`, {
    headers: { Authorization: `Bearer ${token}` },
   })
    .then((res) => res.json())
