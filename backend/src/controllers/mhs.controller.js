@@ -92,12 +92,42 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
  const { id } = req.params;
  try {
+  await prisma.catatanHadir.deleteMany({
+   where: { mahasiswaId: id },
+  });
+
+  const jadwalList = await prisma.jadwalMaster.findMany({
+   where: { mahasiswaIds: { has: id } },
+  });
+
+  for (const jadwal of jadwalList) {
+   await prisma.jadwalMaster.update({
+    where: { id: jadwal.id },
+    data: {
+     mahasiswaIds: jadwal.mahasiswaIds.filter((mhsId) => mhsId !== id),
+     mahasiswa: {
+      disconnect: { id },
+     },
+    },
+   });
+  }
+
   await prisma.mahasiswa.delete({ where: { id } });
   res.json({ message: "Mahasiswa berhasil dihapus" });
  } catch (err) {
   res.status(500).json({ message: "Server error", error: err.message });
  }
 };
+
+// const remove = async (req, res) => {
+//  const { id } = req.params;
+//  try {
+//   await prisma.mahasiswa.delete({ where: { id } });
+//   res.json({ message: "Mahasiswa berhasil dihapus" });
+//  } catch (err) {
+//   res.status(500).json({ message: "Server error", error: err.message });
+//  }
+// };
 
 const enrollFace = async (req, res) => {
  const { id } = req.params;

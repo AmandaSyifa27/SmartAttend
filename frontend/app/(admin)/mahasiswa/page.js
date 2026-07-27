@@ -75,7 +75,7 @@ export default function MahasiswaPage() {
   setForm({
    nim: item.nim,
    nama: item.nama,
-   prodi: item.prodi,
+   prodi: item.prodi || "Teknik Informatika",
    kelas: item.kelas,
    angkatan: item.angkatan,
    email: item.email || "",
@@ -309,13 +309,6 @@ export default function MahasiswaPage() {
         onChange={(e) => setForm({ ...form, nama: e.target.value })}
         required
        />
-       {/* <FormInput
-        label="Program Studi"
-        placeholder="Teknik Informatika"
-        value={form.prodi}
-        onChange={(e) => setForm({ ...form, prodi: e.target.value })}
-        required
-       /> */}
        <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
          Program Studi

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Camera, Check, Info, Play } from "lucide-react";
+import { ArrowLeft, BookUser, Camera, Check, Info, Play } from "lucide-react";
 import api from "@/lib/axios";
 import * as faceapi from "face-api.js";
 import Spinner from "@/components/ui/Spinner";
@@ -280,7 +280,9 @@ export default function PresensiContent() {
    <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm w-full max-w-md p-8 text-center">
      <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-      <span className="text-2xl">📋</span>
+      <span className="text-2xl">
+       <BookUser size={32} color="#9810fa" />
+      </span>
      </div>
      <h2 className="text-xl font-bold text-gray-800 mb-2">
       Siap Memulai Presensi?
