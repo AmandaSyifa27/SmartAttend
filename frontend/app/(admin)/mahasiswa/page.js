@@ -31,7 +31,7 @@ export default function MahasiswaPage() {
  const [form, setForm] = useState({
   nim: "",
   nama: "",
-  prodi: "",
+  prodi: "Teknik Informatika",
   kelas: "",
   angkatan: "",
   email: "",
@@ -65,7 +65,14 @@ export default function MahasiswaPage() {
 
  const handleOpenAdd = () => {
   setEditData(null);
-  setForm({ nim: "", nama: "", prodi: "", kelas: "", angkatan: "", email: "" });
+  setForm({
+   nim: "",
+   nama: "",
+   prodi: "Teknik Informatika",
+   kelas: "",
+   angkatan: "",
+   email: "",
+  });
   setError("");
   setShowModal(true);
  };
