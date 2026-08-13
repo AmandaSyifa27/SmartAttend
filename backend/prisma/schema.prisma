@@ -57,6 +57,11 @@ model Mahasiswa {
   foto String?
   faceDescriptor Float[]
 
+  // --------------Self-enrollment-----------------
+  enrollToken String? @unique
+  enrollTokenExp DateTime?
+  enrollDone Boolean @default(false)
+
   jadwalIds String[] @db.ObjectId
   jadwal JadwalMaster[] @relation(fields: [jadwalIds], references: [id])
 

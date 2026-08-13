@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const crypto = require("crypto");
 
 const getAll = async (req, res) => {
  try {
@@ -58,6 +59,10 @@ const getById = async (req, res) => {
 const create = async (req, res) => {
  const { nim, nama, prodi, kelas, angkatan, email } = req.body;
  try {
+  // buat unique token
+  const enrollToken = crypto.randomUUID();
+  const enrollTokenExp = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 hari exp
+
   const data = await prisma.mahasiswa.create({
    data: {
     nim,
@@ -67,6 +72,9 @@ const create = async (req, res) => {
     angkatan: parseInt(angkatan),
     email,
     faceDescriptor: [],
+    enrollToken,
+    enrollTokenExp,
+    enrollDone: false,
    },
   });
   res.status(201).json({ message: "Mahasiswa berhasil dibuat", data });
@@ -151,4 +159,119 @@ const enrollFace = async (req, res) => {
  }
 };
 
-module.exports = { getAll, getById, create, update, remove, enrollFace };
+const resetToken = async (req, res) => {
+ const { id } = req.params;
+ try {
+  const enrollToken = crypto.randomUUID();
+  const enrollTokenExp = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  const data = await prisma.mahasiswa.update({
+   where: { id },
+   data: {
+    enrollToken,
+    enrollTokenExp,
+    enrollDone: false,
+    faceDescriptor: [],
+   },
+  });
+  res.json({ message: "Token berhasil direset", data });
+ } catch (err) {
+  res.status(500).json({ message: "Server error", error: err.message });
+ }
+};
+
+const getByToken = async (req, res) => {
+ const { token } = req.params;
+ try {
+  const mahasiswa = await prisma.mahasiswa.findunique({
+   where: { enrollToken: token },
+   select: {
+    id: true,
+    nim: true,
+    nama: true,
+    prodi: true,
+    kelas: true,
+    enrollTokenExp: true,
+    enrollDone: true,
+   },
+  });
+
+  if (!mahasiswa) {
+   return res.status(404).json({ message: "Token tidak valid" });
+  }
+
+  if (mahasiswa.enrollDone) {
+   return res
+    .status(400)
+    .json({ message: "Wajah sudah pernah didaftarkan menggunkan link ini" });
+  }
+
+  if (new Date() > new Date(mahasiswa.enrollTokenExp)) {
+   return res
+    .status(400)
+    .json({
+     message:
+      "Link sudah kdaluarsa. Hubungi admin untuk mendapatkan link baru.",
+    });
+  }
+
+  res.json(mahasiswa);
+ } catch (err) {
+  res.status(500).json({ message: "Server error", error: err.message });
+ }
+};
+
+// ------Self-enrollment-----------
+const selfEnrollFace = async (req, res) => {
+ const { token } = req.params;
+ const { faceDescriptor } = req.body;
+ try {
+  if (!faceDescriptor || faceDescriptor.length !== 128) {
+   return res.status(400).json({ message: "Face descriptor tidak valid" });
+  }
+
+  const mahasiswa = await prisma.mahasiswa.findUnique({
+   where: { enrollToken: token },
+  });
+
+  if (!mahasiswa) {
+   return res.status(404).json({ message: "Link tidak valid" });
+  }
+
+  if (mahasiswa.enrollDone) {
+   return res.status(400).json({ message: "Wajah sudah pernah didaftarkan" });
+  }
+
+  if (new Date() > new Date(mahasiswa.enrollTokenExp)) {
+   return res
+    .status(400)
+    .json({
+     message:
+      "Link sudah kadaluarsa. Hubungi admin untuk mendapatkan link baru.",
+    });
+  }
+
+  await prisma.mahasiswa.update({
+   where: { enrollToken: token },
+   data: {
+    faceDescriptor,
+    enrollDone: true,
+   },
+  });
+
+  res.json({ message: "Wajah berhasil didaftarkan." });
+ } catch (err) {
+  res.status(500).json({ message: "Server error", error: err.message });
+ }
+};
+module.exports = {
+ getAll,
+ getById,
+ create,
+ update,
+ remove,
+ enrollFace,
+ resetToken,
+ getByToken,
+ selfEnrollFace,
+};
