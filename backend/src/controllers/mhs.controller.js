@@ -16,6 +16,9 @@ const getAll = async (req, res) => {
     foto: true,
     createdAt: true,
     faceDescriptor: true,
+    enrollToken: true,
+    enrollTokenExp: true,
+    enrollDone: true,
    },
   });
 
@@ -207,12 +210,9 @@ const getByToken = async (req, res) => {
   }
 
   if (new Date() > new Date(mahasiswa.enrollTokenExp)) {
-   return res
-    .status(400)
-    .json({
-     message:
-      "Link sudah kdaluarsa. Hubungi admin untuk mendapatkan link baru.",
-    });
+   return res.status(400).json({
+    message: "Link sudah kdaluarsa. Hubungi admin untuk mendapatkan link baru.",
+   });
   }
 
   res.json(mahasiswa);
@@ -243,12 +243,10 @@ const selfEnrollFace = async (req, res) => {
   }
 
   if (new Date() > new Date(mahasiswa.enrollTokenExp)) {
-   return res
-    .status(400)
-    .json({
-     message:
-      "Link sudah kadaluarsa. Hubungi admin untuk mendapatkan link baru.",
-    });
+   return res.status(400).json({
+    message:
+     "Link sudah kadaluarsa. Hubungi admin untuk mendapatkan link baru.",
+   });
   }
 
   await prisma.mahasiswa.update({
