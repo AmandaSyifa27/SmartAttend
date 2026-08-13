@@ -16,6 +16,11 @@ import {
  Trash,
  TriangleAlert,
  UserRoundPlus,
+ Copy,
+ RefreshCw,
+ Download,
+ Pencil,
+ Trash2,
 } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import Alert from "@/components/ui/Alert";
@@ -47,6 +52,7 @@ export default function MahasiswaPage() {
   message: "",
   onConfirm: null,
  });
+ const [exportLoading, setExportLoading] = useState(false);
 
  const fetchMahasiswa = async () => {
   try {
@@ -123,6 +129,71 @@ export default function MahasiswaPage() {
   }
  };
 
+ const handleSalinLink = (token) => {
+  const link = `${window.location.origin}/enroll/${token}`;
+  navigator.clipboard.writeText(link);
+  showAlert("Link pendaftaran berhasil disalin!", "success");
+ };
+
+ const handleResetToken = async (id) => {
+  setConfirmInfo({
+   show: true,
+   massage: `Reset token enrollment ${nama}? Link lama akan tidak berlaku.`,
+   onConfirm: async () => {
+    setConfirmInfo((prev) => ({ ...prev, show: false }));
+    try {
+     await api.patch("/mahasiswa/${id}/reset-token");
+     showAlert("Token enrollment berhasil direset!", "success");
+     fetchMahasiswa();
+    } catch (err) {
+     showAlert(err.response?.data?.message || "Gagal mereset token", "error");
+    }
+   },
+  });
+ };
+
+ const handleExportExcel = async () => {
+  setExportLoading(true);
+  try {
+   const origin = window.location.origin;
+   const rows = mahasiswa.map((m) => ({
+    NIM: m.nim,
+    Nama: m.nama,
+    "Program Studi": m.prodi,
+    "Link Enrollment": m.enrollToken
+     ? `${origin}/enroll/${m.enrollToken}`
+     : "Belum ada token",
+    "Status Enrollment": m.enrollDone ? "Sudah Enroll" : "Belum Enroll",
+    "Expired Date": m.enrollTokenExp
+     ? new Date(m.enrollTokenExp).toLocaleDateString("id-ID")
+     : "-",
+   }));
+
+   // Buat CSV manual — tidak butuh library tambahan
+   const headers = Object.keys(rows[0]).join(",");
+   const csvRows = rows.map((r) =>
+    Object.values(r)
+     .map((v) => `"${v}"`)
+     .join(","),
+   );
+   const csv = [headers, ...csvRows].join("\n");
+
+   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+   const url = URL.createObjectURL(blob);
+   const a = document.createElement("a");
+   a.href = url;
+   a.download = `enrollment-mahasiswa-${new Date().toISOString().slice(0, 10)}.csv`;
+   a.click();
+   URL.revokeObjectURL(url);
+
+   showAlert("File berhasil diunduh", "success");
+  } catch {
+   showAlert("Gagal mengekspor data", "error");
+  } finally {
+   setExportLoading(false);
+  }
+ };
+
  const filtered = mahasiswa.filter(
   (m) =>
    m.nama.toLowerCase().includes(search.toLowerCase()) ||
@@ -132,6 +203,17 @@ export default function MahasiswaPage() {
  return (
   <div>
    <PageHeader title="Kelola Mahasiswa & Wajah">
+    <div className="flex gap-2">
+     <button
+      onClick={handleExportExcel}
+      disabled={exportLoading}
+      className="border border-gray-300 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50"
+     >
+      <Download size={16} />
+      {exportLoading ? "Mengunduh..." : "Export CSV"}
+     </button>
+     <Button onClick={handleOpenAdd}>+ Tambah Mahasiswa</Button>
+    </div>
     <Button
      onClick={handleOpenAdd}
      className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 py-2 rounded-lg font-semibold transition-colors hover:bg-[#8000d4]"
@@ -232,6 +314,50 @@ export default function MahasiswaPage() {
              <SwitchCamera size={18} color="#5C00F1" />
             </button>
            )}
+
+           {item.enrollToken && (
+            <button
+             onClick={() => handleSalinLink(item.enrollToken)}
+             className="text-gray-400 hover:text-blue-500"
+             title="Salin Link Enrollment"
+            >
+             <Copy size={18} />
+            </button>
+           )}
+
+           <button
+            onClick={() => handleResetToken(item.id, item.nama)}
+            className="text-gray-400 hover:text-orange-500"
+            title="Reset Token"
+           >
+            <RefreshCw size={16} />
+           </button>
+
+           <button
+            onClick={() => handleOpenEdit(item)}
+            className="text-gray-400 hover:text-purple-600"
+            title="Edit"
+           >
+            <Pencil size={16} />
+           </button>
+
+           <button
+            onClick={() =>
+             setConfirmInfo({
+              show: true,
+              message: `Yakin ingin menghapus ${item.nama}?`,
+              onConfirm: () => {
+               setConfirmInfo((prev) => ({ ...prev, show: false }));
+               handleDelete(item.id);
+              },
+             })
+            }
+            className="text-gray-400 hover:text-red-500"
+            title="Hapus"
+           >
+            <Trash2 size={16} />
+           </button>
+
            <button
             onClick={() => handleOpenEdit(item)}
             className="text-gray-400 hover:text-purple-600"
