@@ -203,17 +203,14 @@ export default function MahasiswaPage() {
  return (
   <div>
    <PageHeader title="Kelola Mahasiswa & Wajah">
-    <div className="flex gap-2">
-     <button
-      onClick={handleExportExcel}
-      disabled={exportLoading}
-      className="border border-gray-300 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50"
-     >
-      <Download size={16} />
-      {exportLoading ? "Mengunduh..." : "Export CSV"}
-     </button>
-     <Button onClick={handleOpenAdd}>+ Tambah Mahasiswa</Button>
-    </div>
+    <Button
+     onClick={handleExportExcel}
+     disabled={exportLoading}
+     className="border border-gray-300 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50"
+    >
+     <Download size={16} />
+     {exportLoading ? "Mengunduh..." : "Export CSV"}
+    </Button>
     <Button
      onClick={handleOpenAdd}
      className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 py-2 rounded-lg font-semibold transition-colors hover:bg-[#8000d4]"

@@ -186,7 +186,7 @@ const resetToken = async (req, res) => {
 const getByToken = async (req, res) => {
  const { token } = req.params;
  try {
-  const mahasiswa = await prisma.mahasiswa.findunique({
+  const mahasiswa = await prisma.mahasiswa.findUnique({
    where: { enrollToken: token },
    select: {
     id: true,
