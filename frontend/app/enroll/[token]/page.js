@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import * as faceapi from "face-api.js";
 import axios from "axios";
+import { BadgeCheck, Camera, ScanFace, TriangleAlert, X } from "lucide-react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -180,7 +181,9 @@ export default function EnrollPage() {
    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm p-6 text-center">
      <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-      <span className="text-3xl">❌</span>
+      <span className="text-3xl">
+       <X size={32} className="text-red-700" />
+      </span>
      </div>
      <h2 className="font-bold text-gray-800 text-lg mb-2">Link Tidak Valid</h2>
      <p className="text-gray-500 text-sm mb-4">{errorMsg}</p>
@@ -189,6 +192,7 @@ export default function EnrollPage() {
        Apa yang harus dilakukan?
       </p>
       <p className="text-orange-600 text-xs">
+       Jika anda tidak merasa telah melakukan pendaftaran wajah, <br />
        Hubungi admin Program Studi Teknik Informatika UCIC untuk mendapatkan
        link enrollment baru.
       </p>
@@ -205,7 +209,9 @@ export default function EnrollPage() {
      {/* Header */}
      <div className="text-center mb-6">
       <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-       <span className="text-3xl">📷</span>
+       <span className="text-3xl">
+        <ScanFace size={32} color="#5C00F1" strokeWidth={2.25} />
+       </span>
       </div>
       <h1 className="font-bold text-gray-800 text-xl">Pendaftaran Wajah</h1>
       <p className="text-gray-500 text-sm mt-1">SmartAttend — UCIC</p>
@@ -223,7 +229,8 @@ export default function EnrollPage() {
      {/* Warning */}
      <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-4">
       <p className="text-orange-700 text-sm font-semibold mb-1">
-       ⚠ Perhatian Penting
+       <TriangleAlert size={18} className="text-orange-700" />
+       Perhatian Penting
       </p>
       <p className="text-orange-600 text-xs leading-relaxed">
        Pastikan Anda adalah mahasiswa dengan nama dan NIM di atas. Link ini
@@ -324,7 +331,7 @@ export default function EnrollPage() {
          onClick={startKamera}
          className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-xl text-sm flex items-center gap-2"
         >
-         📷 Aktifkan Kamera
+         <Camera size={18} color="#ffffff" /> Aktifkan Kamera
         </button>
        )}
        {!modelLoaded && (
@@ -367,7 +374,7 @@ export default function EnrollPage() {
          ? "Mendeteksi..."
          : samples.length >= TOTAL_SAMPLE
            ? "Menyimpan..."
-           : `📸 Ambil Sampel (${samples.length}/${TOTAL_SAMPLE})`}
+           : `<Camera size={18} color="#ffffff" />  Ambil Sampel (${samples.length}/${TOTAL_SAMPLE})`}
      </button>
     </div>
    </div>
@@ -379,7 +386,9 @@ export default function EnrollPage() {
    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm p-6 text-center">
      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-      <span className="text-4xl">✅</span>
+      <span className="text-4xl">
+       <BadgeCheck size={32} color="#4ddb43" />
+      </span>
      </div>
      <h2 className="font-bold text-gray-800 text-xl mb-2">
       Pendaftaran Berhasil!

@@ -11,9 +11,7 @@ import ModalEnrollWajah from "@/components/shared/ModalEnrollWajah";
 import {
  Camera,
  Check,
- SquarePen,
  SwitchCamera,
- Trash,
  TriangleAlert,
  UserRoundPlus,
  Copy,
@@ -336,7 +334,7 @@ export default function MahasiswaPage() {
             onClick={() => handleOpenEdit(item)}
             className="text-gray-400 hover:text-purple-600"
            >
-            <SquarePen size={18} color="#ffbb00" />
+            <Pencil size={18} color="#ffbb00" />
            </button>
            <button
             onClick={() =>
@@ -351,7 +349,7 @@ export default function MahasiswaPage() {
             }
             className="text-gray-400 hover:text-red-500"
            >
-            <Trash size={18} color="#f00048" />
+            <Trash2 size={18} color="#f00048" />
            </button>
           </div>
          </td>
