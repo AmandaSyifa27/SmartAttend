@@ -203,21 +203,23 @@ export default function MahasiswaPage() {
  return (
   <div>
    <PageHeader title="Kelola Mahasiswa & Wajah">
-    <Button
-     onClick={handleExportExcel}
-     disabled={exportLoading}
-     className="border border-gray-300 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50"
-    >
-     <Download size={16} />
-     {exportLoading ? "Mengunduh..." : "Export CSV"}
-    </Button>
-    <Button
-     onClick={handleOpenAdd}
-     className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 py-2 rounded-lg font-semibold transition-colors hover:bg-[#8000d4]"
-    >
-     <UserRoundPlus color="#fff" size={18} />
-     Tambah Mahasiswa
-    </Button>
+    <div className="flex items-center gap-3 ml-auto">
+     <button
+      onClick={handleExportExcel}
+      disabled={exportLoading}
+      className="border border-gray-300 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50"
+     >
+      <Download size={16} />
+      {exportLoading ? "Mengunduh..." : "Export CSV"}
+     </button>
+     <Button
+      onClick={handleOpenAdd}
+      className="flex items-center gap-2 bg-[#9c00ff] text-white px-4 py-2 rounded-lg font-semibold transition-colors hover:bg-[#8000d4]"
+     >
+      <UserRoundPlus color="#fff" size={18} />
+      Tambah Mahasiswa
+     </Button>
+    </div>
    </PageHeader>
 
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
@@ -327,32 +329,7 @@ export default function MahasiswaPage() {
             className="text-gray-400 hover:text-orange-500"
             title="Reset Token"
            >
-            <RefreshCw size={16} />
-           </button>
-
-           <button
-            onClick={() => handleOpenEdit(item)}
-            className="text-gray-400 hover:text-purple-600"
-            title="Edit"
-           >
-            <Pencil size={16} />
-           </button>
-
-           <button
-            onClick={() =>
-             setConfirmInfo({
-              show: true,
-              message: `Yakin ingin menghapus ${item.nama}?`,
-              onConfirm: () => {
-               setConfirmInfo((prev) => ({ ...prev, show: false }));
-               handleDelete(item.id);
-              },
-             })
-            }
-            className="text-gray-400 hover:text-red-500"
-            title="Hapus"
-           >
-            <Trash2 size={16} />
+            <RefreshCw size={18} />
            </button>
 
            <button
