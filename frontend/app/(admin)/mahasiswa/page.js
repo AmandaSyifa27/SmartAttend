@@ -133,18 +133,18 @@ export default function MahasiswaPage() {
   showAlert("Link pendaftaran berhasil disalin!", "success");
  };
 
- const handleResetToken = async (id) => {
+ const handleResetToken = async (id, nama) => {
   setConfirmInfo({
    show: true,
-   massage: `Reset token enrollment ${nama}? Link lama akan tidak berlaku.`,
+   message: `Reset token enrollment ${nama}? Link lama akan tidak berlaku.`,
    onConfirm: async () => {
     setConfirmInfo((prev) => ({ ...prev, show: false }));
     try {
-     await api.patch("/mahasiswa/${id}/reset-token");
-     showAlert("Token enrollment berhasil direset!", "success");
+     await api.patch(`/mahasiswa/${id}/reset-token`);
+     showAlert("Token berhasil direset", "success");
      fetchMahasiswa();
     } catch (err) {
-     showAlert(err.response?.data?.message || "Gagal mereset token", "error");
+     showAlert(err.response?.data?.message || "Gagal reset token", "error");
     }
    },
   });
