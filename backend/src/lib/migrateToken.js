@@ -3,7 +3,9 @@ const prisma = require("./prisma");
 
 const migrate = async () => {
  const mahasiswaList = await prisma.mahasiswa.findMany({
-  where: { enrollToken: null },
+  where: {
+   enrollToken: null,
+  },
  });
 
  console.log(`Ditemukan ${mahasiswaList.length} mahasiswa tanpa token`);
