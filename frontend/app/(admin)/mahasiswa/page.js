@@ -23,6 +23,7 @@ import {
 import Spinner from "@/components/ui/Spinner";
 import Alert from "@/components/ui/Alert";
 import Confirm from "@/components/ui/Confirm";
+import Pagination from "@/components/ui/Pagination";
 
 export default function MahasiswaPage() {
  const [mahasiswa, setMahasiswa] = useState([]);
@@ -62,6 +63,9 @@ export default function MahasiswaPage() {
    setLoading(false);
   }
  };
+
+ const [currentPage, setCurrentPage] = useState(1);
+ const ITEMS_PER_PAGE = 20;
 
  useEffect(() => {
   fetchMahasiswa();
@@ -161,7 +165,7 @@ export default function MahasiswaPage() {
     "Link Enrollment": m.enrollToken
      ? `${origin}/enroll/${m.enrollToken}`
      : "Belum ada token",
-    "Status Enrollment": m.enrollDone ? "Sudah Enroll" : "Belum Enroll",
+    "Status Wajah": m.isFaceEnrolled ? "Sudah Direkam" : "Belum Direkam",
     "Expired Date": m.enrollTokenExp
      ? new Date(m.enrollTokenExp).toLocaleDateString("id-ID")
      : "-",
@@ -198,6 +202,12 @@ export default function MahasiswaPage() {
    m.nim.includes(search),
  );
 
+ const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+ const paginated = filtered.slice(
+  (currentPage - 1) * ITEMS_PER_PAGE,
+  currentPage * ITEMS_PER_PAGE,
+ );
+
  return (
   <div>
    <PageHeader title="Kelola Mahasiswa & Wajah">
@@ -225,7 +235,10 @@ export default function MahasiswaPage() {
      <SearchInput
       placeholder="Cari NIM atau Nama..."
       value={search}
-      onChange={(e) => setSearch(e.target.value)}
+      onChange={(e) => {
+       setSearch(e.target.value);
+       setCurrentPage(1);
+      }}
       className="w-full max-w-xs"
      />
     </div>
@@ -255,7 +268,7 @@ export default function MahasiswaPage() {
         </td>
        </tr>
       ) : (
-       filtered.map((item) => (
+       paginated.map((item) => (
         <tr key={item.id} className="hover:bg-gray-50">
          <td
           className={`px-5 py-3 font-medium ${!item.isFaceEnrolled ? "text-red-500" : "text-gray-700"}`}
@@ -358,6 +371,11 @@ export default function MahasiswaPage() {
       )}
      </tbody>
     </table>
+    <Pagination
+     currentPage={currentPage}
+     totalPages={totalPages}
+     onPageChange={(page) => setCurrentPage(page)}
+    />
    </div>
 
    {/* Modal Tambah/Edit */}

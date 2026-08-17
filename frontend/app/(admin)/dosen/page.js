@@ -10,6 +10,7 @@ import { SquarePen, Trash, UserPlus } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import Alert from "@/components/ui/Alert";
 import Confirm from "@/components/ui/Confirm";
+import Pagination from "@/components/ui/Pagination";
 
 export default function DataDosenPage() {
  const [dosen, setDosen] = useState([]);
@@ -34,6 +35,9 @@ export default function DataDosenPage() {
   message: "",
   onConfirm: null,
  });
+
+ const [currentPage, setCurrentPage] = useState(1);
+ const ITEMS_PER_PAGE = 20;
 
  const fetchDosen = async () => {
   try {
@@ -108,6 +112,12 @@ export default function DataDosenPage() {
    d.nidn.includes(search),
  );
 
+ const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+ const paginated = filtered.slice(
+  (currentPage - 1) * ITEMS_PER_PAGE,
+  currentPage * ITEMS_PER_PAGE,
+ );
+
  return (
   <div>
    <PageHeader title="Kelola Data Dosen">
@@ -154,7 +164,7 @@ export default function DataDosenPage() {
         </td>
        </tr>
       ) : (
-       filtered.map((item) => (
+       paginated.map((item) => (
         <tr key={item.id} className="hover:bg-gray-50">
          <td className="px-5 py-3 font-medium text-gray-700">{item.nidn}</td>
          <td className="px-5 py-3 text-gray-700">{item.nama}</td>
@@ -189,6 +199,11 @@ export default function DataDosenPage() {
       )}
      </tbody>
     </table>
+    <Pagination
+     currentPage={currentPage}
+     totalPages={totalPages}
+     onPageChange={(page) => setCurrentPage(page)}
+    />
    </div>
 
    {showModal && (
@@ -210,7 +225,10 @@ export default function DataDosenPage() {
         label="NIDN"
         placeholder="0412038801"
         value={form.nidn}
-        onChange={(e) => setForm({ ...form, nidn: e.target.value })}
+        onChange={(e) => {
+         setSearch(e.target.value);
+         setCurrentPage(1);
+        }}
         required
        />
        <FormInput

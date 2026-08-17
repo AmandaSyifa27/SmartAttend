@@ -12,7 +12,6 @@ export default function EnrollPage() {
  const { token } = useParams();
 
  const [step, setStep] = useState("loading");
- // loading → consent → camera → success → error
 
  const [mahasiswa, setMahasiswa] = useState(null);
  const [errorMsg, setErrorMsg] = useState("");
@@ -29,7 +28,6 @@ export default function EnrollPage() {
  const streamRef = useRef(null);
  const TOTAL_SAMPLE = 5;
 
- // Verifikasi token saat halaman dibuka
  useEffect(() => {
   const verifyToken = async () => {
    try {
@@ -46,7 +44,6 @@ export default function EnrollPage() {
   verifyToken();
  }, [token]);
 
- // Set srcObject saat kamera aktif
  useEffect(() => {
   if (!kameraAktif || !streamRef.current || !videoRef.current) return;
   const video = videoRef.current;
@@ -54,7 +51,6 @@ export default function EnrollPage() {
   video.play().catch(() => setKameraError("Browser memblokir kamera."));
  }, [kameraAktif]);
 
- // Cleanup saat unmount
  useEffect(() => {
   return () => {
    if (streamRef.current)
@@ -144,7 +140,6 @@ export default function EnrollPage() {
  const simpanDescriptor = async (allSamples) => {
   setSubmitting(true);
   try {
-   // Rata-rata dari semua sampel
    const avg = allSamples[0].map(
     (_, i) => allSamples.reduce((sum, s) => sum + s[i], 0) / allSamples.length,
    );
@@ -163,8 +158,6 @@ export default function EnrollPage() {
   }
  };
 
- // ==================== UI ====================
-
  if (step === "loading") {
   return (
    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -179,7 +172,7 @@ export default function EnrollPage() {
  if (step === "error") {
   return (
    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm p-6 text-center">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-md p-6 text-center">
      <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
       <span className="text-3xl">
        <X size={40} className="text-red-600" />
@@ -205,8 +198,7 @@ export default function EnrollPage() {
  if (step === "consent") {
   return (
    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm p-6">
-     {/* Header */}
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-md p-6">
      <div className="text-center mb-6">
       <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
        <span className="text-3xl">
@@ -217,7 +209,6 @@ export default function EnrollPage() {
       <p className="text-gray-500 text-sm mt-1">SmartAttend — UCIC</p>
      </div>
 
-     {/* Info Mahasiswa */}
      <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-4">
       <p className="text-xs text-purple-600 font-semibold mb-2">DATA ANDA</p>
       <p className="font-bold text-gray-800">{mahasiswa?.nama}</p>
@@ -226,12 +217,12 @@ export default function EnrollPage() {
       </p>
      </div>
 
-     {/* Warning */}
-     <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-4">
-      <p className="text-orange-700 text-sm font-semibold mb-1">
-       <TriangleAlert size={18} className="text-orange-700" />
-       <span>Perhatian Penting</span>
-      </p>
+     <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+      <div className="flex items-center gap-2 text-orange-700 text-sm font-semibold mb-2">
+       <TriangleAlert size={18} className="shrink-0" />
+       <h3>Perhatian Penting</h3>
+      </div>
+
       <p className="text-orange-600 text-xs leading-relaxed">
        Pastikan Anda adalah mahasiswa dengan nama dan NIM di atas. Link ini
        bersifat pribadi dan tidak boleh dibagikan kepada siapapun.
@@ -239,7 +230,6 @@ export default function EnrollPage() {
       </p>
      </div>
 
-     {/* Consent */}
      <div className="bg-gray-50 rounded-xl p-4 mb-5">
       <p className="text-gray-700 text-sm font-semibold mb-2">
        Persetujuan Data Biometrik
@@ -279,110 +269,101 @@ export default function EnrollPage() {
 
  if (step === "camera") {
   return (
-   <div className="min-h-screen bg-gray-900 flex flex-col">
-    {/* Header */}
-    <div className="bg-gray-900 px-4 py-4 flex items-center gap-3 border-b border-gray-800">
-     <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0">
-      {mahasiswa?.nama?.charAt(0)}
-     </div>
-     <div>
-      <p className="text-white text-sm font-semibold">{mahasiswa?.nama}</p>
-      <p className="text-gray-400 text-xs">{mahasiswa?.nim}</p>
-     </div>
-    </div>
-
-    {/* Kamera */}
-    <div className="flex-1 relative bg-black">
-     <video
-      ref={videoRef}
-      autoPlay
-      playsInline
-      muted
-      className={`w-full h-full object-cover ${!kameraAktif ? "hidden" : ""}`}
-     />
-
-     {/* Overlay guide saat kamera aktif */}
-     {kameraAktif && (
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-       <div className="w-56 h-56 border-2 border-white/50 rounded-full" />
+   <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="bg-gray-900 rounded-2xl overflow-hidden w-full max-w-md shadow-xl">
+     <div className="px-4 py-4 flex items-center gap-3 border-b border-gray-800">
+      <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0">
+       {mahasiswa?.nama?.charAt(0)}
       </div>
-     )}
+      <div>
+       <p className="text-white text-sm font-semibold">{mahasiswa?.nama}</p>
+       <p className="text-gray-400 text-xs">{mahasiswa?.nim}</p>
+      </div>
+     </div>
 
-     {/* Status text saat kamera aktif */}
-     {kameraAktif && (
-      <div className="absolute bottom-4 left-4 right-4">
-       <div className="bg-black/60 rounded-xl px-4 py-2">
-        <p className="text-white text-xs text-center">{statusText}</p>
+     <div className="relative bg-black" style={{ aspectRatio: "4/3" }}>
+      {/* <div className="relative bg-black" style={{ aspectRatio: "3/4" }}> */}
+      <video
+       ref={videoRef}
+       autoPlay
+       playsInline
+       muted
+       className={`w-full h-full object-cover ${!kameraAktif ? "hidden" : ""}`}
+      />
+
+      {kameraAktif && (
+       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-48 h-48 border-2 border-white/50 rounded-full" />
        </div>
-      </div>
-     )}
-
-     {/* State belum aktif kamera */}
-     {!kameraAktif && (
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6">
-       {kameraError && (
-        <div className="bg-red-900/80 rounded-xl px-4 py-3 w-full">
-         <p className="text-red-300 text-sm text-center">{kameraError}</p>
-        </div>
-       )}
-       <p className="text-gray-400 text-sm text-center">{statusText}</p>
-       {modelLoaded && (
-        <button
-         onClick={startKamera}
-         className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-xl text-sm flex items-center gap-2"
-        >
-         <Camera size={20} color="#ffffff" /> Aktifkan Kamera
-        </button>
-       )}
-       {!modelLoaded && (
-        <div className="flex items-center gap-2">
-         <div className="w-4 h-4 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
-         <p className="text-gray-400 text-sm">Memuat model...</p>
-        </div>
-       )}
-      </div>
-     )}
-    </div>
-
-    {/* Panel bawah */}
-    <div className="bg-gray-900 px-4 py-5 border-t border-gray-800">
-     {/* Progress sampel */}
-     <div className="flex gap-2 mb-3">
-      {Array.from({ length: TOTAL_SAMPLE }).map((_, i) => (
-       <div
-        key={i}
-        className={`flex-1 h-2 rounded-full transition-colors ${
-         i < samples.length ? "bg-purple-500" : "bg-gray-700"
-        }`}
-       />
-      ))}
-     </div>
-     <p className="text-gray-400 text-xs text-center mb-4">
-      {samples.length}/{TOTAL_SAMPLE} sampel wajah terkumpul
-     </p>
-
-     <button
-      onClick={ambilSampel}
-      disabled={
-       !kameraAktif || capturing || submitting || samples.length >= TOTAL_SAMPLE
-      }
-      className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl text-sm transition-colors"
-     >
-      {submitting ? (
-       "Menyimpan..."
-      ) : capturing ? (
-       "Mendeteksi..."
-      ) : samples.length >= TOTAL_SAMPLE ? (
-       "Menyimpan..."
-      ) : (
-       <>
-        <Camera size={18} color="#ffffff" />
-        <span>
-         Ambil Sampel ({samples.length}/{TOTAL_SAMPLE})
-        </span>
-       </>
       )}
-     </button>
+
+      {kameraAktif && (
+       <div className="absolute bottom-3 left-3 right-3">
+        <div className="bg-black/60 rounded-xl px-4 py-2">
+         <p className="text-white text-xs text-center">{statusText}</p>
+        </div>
+       </div>
+      )}
+
+      {!kameraAktif && (
+       <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6">
+        {kameraError && (
+         <div className="bg-red-900/80 rounded-xl px-4 py-3 w-full">
+          <p className="text-red-300 text-sm text-center">{kameraError}</p>
+         </div>
+        )}
+        <p className="text-gray-400 text-sm text-center">{statusText}</p>
+        {modelLoaded && (
+         <button
+          onClick={startKamera}
+          className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-xl text-sm"
+         >
+          Aktifkan Kamera
+         </button>
+        )}
+        {!modelLoaded && (
+         <div className="flex items-center gap-2">
+          <div className="w-4 h-4 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-400 text-sm">Memuat model...</p>
+         </div>
+        )}
+       </div>
+      )}
+     </div>
+
+     <div className="px-4 py-5">
+      <div className="flex gap-2 mb-3">
+       {Array.from({ length: TOTAL_SAMPLE }).map((_, i) => (
+        <div
+         key={i}
+         className={`flex-1 h-2 rounded-full transition-colors ${
+          i < samples.length ? "bg-purple-500" : "bg-gray-700"
+         }`}
+        />
+       ))}
+      </div>
+      <p className="text-gray-400 text-xs text-center mb-4">
+       {samples.length}/{TOTAL_SAMPLE} sampel wajah terkumpul
+      </p>
+      <button
+       onClick={ambilSampel}
+       disabled={
+        !kameraAktif ||
+        capturing ||
+        submitting ||
+        samples.length >= TOTAL_SAMPLE
+       }
+       className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl text-sm transition-colors"
+      >
+       {submitting
+        ? "Menyimpan..."
+        : capturing
+          ? "Mendeteksi..."
+          : samples.length >= TOTAL_SAMPLE
+            ? "Menyimpan..."
+            : `Ambil Sampel (${samples.length}/${TOTAL_SAMPLE})`}
+      </button>
+     </div>
     </div>
    </div>
   );
@@ -391,7 +372,7 @@ export default function EnrollPage() {
  if (step === "success") {
   return (
    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm p-6 text-center">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-md p-6 text-center">
      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
       <span className="text-4xl">
        <BadgeCheck size={40} color="#4ddb43" />

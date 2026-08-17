@@ -7,6 +7,7 @@ import { Trash } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import Alert from "@/components/ui/Alert";
 import Confirm from "@/components/ui/Confirm";
+import Pagination from "@/components/ui/Pagination";
 
 export default function RiwayatAdminPage() {
  const [jadwalList, setJadwalList] = useState([]);
@@ -25,6 +26,9 @@ export default function RiwayatAdminPage() {
   message: "",
   onConfirm: null,
  });
+
+ const [currentPage, setCurrentPage] = useState(1);
+ const ITEMS_PER_PAGE = 20;
 
  useEffect(() => {
   api
@@ -59,6 +63,12 @@ export default function RiwayatAdminPage() {
   });
  });
  const mahasiswaList = Object.values(mahasiswaMap);
+
+ const totalPages = Math.ceil(mahasiswaList.length / ITEMS_PER_PAGE);
+ const paginatedMhs = mahasiswaList.slice(
+  (currentPage - 1) * ITEMS_PER_PAGE,
+  currentPage * ITEMS_PER_PAGE,
+ );
 
  const getCatatan = (mahasiswaId, sesiId) => {
   const sesi = rekap.find((s) => s.id === sesiId);
@@ -125,7 +135,10 @@ export default function RiwayatAdminPage() {
       </label>
       <select
        value={selectedJadwal}
-       onChange={(e) => setSelectedJadwal(e.target.value)}
+       onChange={(e) => {
+        setSelectedJadwal(e.target.value);
+        setCurrentPage(1);
+       }}
        className="text-gray-700 w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
       >
        <option value="">Pilih jadwal...</option>
@@ -237,7 +250,7 @@ export default function RiwayatAdminPage() {
          </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-         {mahasiswaList.map((mhs, index) => {
+         {paginatedMhs.map((mhs, index) => {
           const persen = getPersentase(mhs.id);
           return (
            <tr key={mhs.id} className="hover:bg-gray-50">
@@ -301,6 +314,11 @@ export default function RiwayatAdminPage() {
          })}
         </tbody>
        </table>
+       <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+       />
       </div>
      )}
     </div>

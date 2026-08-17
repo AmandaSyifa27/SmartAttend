@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/axios";
 import Spinner from "@/components/ui/Spinner";
+import Pagination from "@/components/ui/Pagination";
 
 export default function RiwayatPage() {
  const [jadwalList, setJadwalList] = useState([]);
@@ -10,6 +11,8 @@ export default function RiwayatPage() {
  const [rekap, setRekap] = useState([]);
  const [loadingJadwal, setLoadingJadwal] = useState(true);
  const [loadingRekap, setLoadingRekap] = useState(false);
+ const [currentPage, setCurrentPage] = useState(1);
+ const ITEMS_PER_PAGE = 20;
 
  useEffect(() => {
   api
@@ -36,7 +39,6 @@ export default function RiwayatPage() {
   fetchRekap();
  }, [selectedJadwal]);
 
- // Ambil semua mahasiswa unik dari semua sesi
  const mahasiswaMap = {};
  rekap.forEach((sesi) => {
   sesi.catatanHadir.forEach((c) => {
@@ -47,7 +49,12 @@ export default function RiwayatPage() {
  });
  const mahasiswaList = Object.values(mahasiswaMap);
 
- // Hitung % kehadiran per mahasiswa
+ const totalPages = Math.ceil(mahasiswaList.length / ITEMS_PER_PAGE);
+ const paginatedMhs = mahasiswaList.slice(
+  (currentPage - 1) * ITEMS_PER_PAGE,
+  currentPage * ITEMS_PER_PAGE,
+ );
+
  const getStatus = (mahasiswaId, sesiId) => {
   const sesi = rekap.find((s) => s.id === sesiId);
   if (!sesi) return "-";
@@ -78,7 +85,6 @@ export default function RiwayatPage() {
     </div>
    </div>
 
-   {/* Filter */}
    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
     <div className="flex gap-4 items-end">
      <div className="flex-1 max-w-xs">
@@ -87,7 +93,10 @@ export default function RiwayatPage() {
       </label>
       <select
        value={selectedJadwal}
-       onChange={(e) => setSelectedJadwal(e.target.value)}
+       onChange={(e) => {
+        setSelectedJadwal(e.target.value);
+        setCurrentPage(1);
+       }}
        className="text-gray-700 w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
       >
        <option value="">Pilih Mata Kuliah...</option>
@@ -100,7 +109,6 @@ export default function RiwayatPage() {
      </div>
     </div>
 
-    {/* Stats */}
     {selectedJadwal && rekap.length > 0 && (
      <div className="grid grid-cols-3 gap-4 mt-4">
       <div className="bg-gray-50 rounded-xl p-3 text-center">
@@ -187,7 +195,7 @@ export default function RiwayatPage() {
          </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-         {mahasiswaList.map((mhs, index) => {
+         {paginatedMhs.map((mhs, index) => {
           const persen = getPersentase(mhs.id);
           return (
            <tr key={mhs.id} className="hover:bg-gray-50">
@@ -228,6 +236,11 @@ export default function RiwayatPage() {
          })}
         </tbody>
        </table>
+       <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+       />
       </div>
      )}
     </div>

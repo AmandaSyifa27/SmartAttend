@@ -94,21 +94,17 @@ export default function AdminLayout({ children }) {
   const parts = name.trim().split(" ");
 
   if (parts.length > 1) {
-   // Jika ada 2 kata atau lebih: Ambil huruf pertama kata ke-1 dan kata ke-2
    return (parts[0][0] + parts[1][0]).toUpperCase();
   } else {
-   // Jika cuma 1 kata: Ambil 2 huruf pertama dari kata tersebut
    return name.substring(0, 2).toUpperCase();
   }
  };
 
  return (
   <div className="flex min-h-screen bg-gray-50">
-   {/* Sidebar */}
    <aside
     className={`${sidebarOpen ? "w-56" : "w-16"} bg-gray-900 text-white flex flex-col fixed h-full transition-all duration-300 z-20`}
    >
-    {/* Logo + Toggle */}
     <div
      className={`flex items-center ${sidebarOpen ? "justify-between" : "justify-center"} px-4 py-4 border-b border-gray-700`}
     >
@@ -127,7 +123,6 @@ export default function AdminLayout({ children }) {
      </button>
     </div>
 
-    {/* Menu */}
     <nav className="flex-1 px-2 py-4 overflow-y-auto space-y-4">
      {menuGroups.map((group) => (
       <div key={group.label}>
@@ -148,7 +143,6 @@ export default function AdminLayout({ children }) {
          }`}
         >
          <item.icon size={18} className="shrink-0" />
-         {/* <span className="text-base shrink-0">{item.icon}</span> */}
          {sidebarOpen && <span>{item.label}</span>}
         </Link>
        ))}
@@ -156,7 +150,6 @@ export default function AdminLayout({ children }) {
      ))}
     </nav>
 
-    {/* Logout */}
     <div className="px-2 py-4 border-t border-gray-700">
      <button
       onClick={handleLogout}
@@ -169,12 +162,9 @@ export default function AdminLayout({ children }) {
     </div>
    </aside>
 
-   {/* Main */}
-
    <div
     className={`flex-1 min-w-0 ${sidebarOpen ? "ml-56" : "ml-16"} flex flex-col transition-all duration-300 overflow-hidden`}
    >
-    {/* Topbar */}
     <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10">
      <div>
       {tahunAjaran && (
@@ -191,7 +181,6 @@ export default function AdminLayout({ children }) {
       </div>
       <Link href="/pengaturan">
        <div className="w-9 h-9 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
-        {/* {user?.nama?.charAt(0)} */}
         {getInitials(user?.nama)}
        </div>
       </Link>

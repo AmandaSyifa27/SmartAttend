@@ -75,7 +75,6 @@ export default function DosenLayout({ children }) {
 
  return (
   <div className="flex min-h-screen bg-gray-50">
-   {/* SIDEBAR: Berdiri sendiri di kiri */}
    <aside
     className={`${sidebarOpen ? "w-56" : "w-16"} bg-gray-900 text-white flex flex-col fixed h-full transition-all duration-300 z-20`}
    >
@@ -125,7 +124,6 @@ export default function DosenLayout({ children }) {
     </div>
    </aside>
 
-   {/* CONTENT AREA: Memiliki margin-left sesuai lebar sidebar */}
    <div
     className={`flex-1 min-w-0 ${sidebarOpen ? "ml-56" : "ml-16"} flex flex-col transition-all duration-300 overflow-hidden`}
    >

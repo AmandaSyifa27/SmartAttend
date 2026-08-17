@@ -59,18 +59,23 @@ export default function JadwalPage() {
  const [searchMhs, setSearchMhs] = useState("");
  const [pilihSemuaPeserta, setPilihSemuaPeserta] = useState(false);
 
+ const [tahunAjaranList, setTahunAjaranList] = useState([]);
+ const [filterTahunAjaran, setFilterTahunAjaran] = useState("aktif");
+
  const fetchAll = async () => {
   try {
-   const [j, d, mk, mhs] = await Promise.all([
+   const [j, d, mk, mhs, ta] = await Promise.all([
     api.get("/jadwal"),
     api.get("/dosen"),
     api.get("/mata-kuliah"),
     api.get("/mahasiswa"),
+    api.get("/tahun-ajaran"),
    ]);
    setJadwal(j.data);
    setDosen(d.data);
    setMataKuliah(mk.data);
    setMahasiswaList(mhs.data);
+   setTahunAjaranList(ta.data);
   } catch (err) {
    console.error(err);
   } finally {
@@ -198,7 +203,13 @@ export default function JadwalPage() {
    j.dosen?.nama.toLowerCase().includes(search.toLowerCase()) ||
    j.kelas.toLowerCase().includes(search.toLowerCase());
   const matchHari = filterHari === "Semua" || j.hari === filterHari;
-  return matchSearch && matchHari;
+  const matchTA =
+   filterTahunAjaran === "aktif"
+    ? j.tahunAjaran?.isAktif === true
+    : filterTahunAjaran === "semua"
+      ? true
+      : j.tahunAjaranId === filterTahunAjaran;
+  return matchSearch && matchHari && matchTA;
  });
 
  const filteredMhs = mahasiswaList.filter(
@@ -247,6 +258,19 @@ export default function JadwalPage() {
       {HARI.map((h) => (
        <option key={h} value={h}>
         {h}
+       </option>
+      ))}
+     </select>
+     <select
+      value={filterTahunAjaran}
+      onChange={(e) => setFilterTahunAjaran(e.target.value)}
+      className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-700"
+     >
+      <option value="aktif">T.A Aktif</option>
+      <option value="semua">Semua T.A</option>
+      {tahunAjaranList.map((ta) => (
+       <option key={ta.id} value={ta.id}>
+        {ta.nama}
        </option>
       ))}
      </select>
